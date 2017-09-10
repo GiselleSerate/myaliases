@@ -1,0 +1,5 @@
+# alias to run sublime text from anywhere
+alias subl='"/mnt/c/Program Files/Sublime Text 3/sublime_text.exe"'
+
+# wanna go to desktop
+alias desk='cd /mnt/c/Users/gsera/Desktop'

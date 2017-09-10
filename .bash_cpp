@@ -1,0 +1,19 @@
+# vanilla compile; fully compile independent c++ file according to 70 standards
+# usage: pass one argument that does not contain the file extension
+clangv() {
+        clang++ -std=c++11 -pedantic -Wall -Wextra "$1.cpp" -o "$1"
+}
+
+# partial compile c++ to output file
+# usage: pass one argument that does not contain the file extension
+clangp() {
+	clang ++ -c -o "$1".o -std=c++11 -pedantic -Wall -Wextra "$1".cpp
+}
+
+# link c++ file according to 70 standards
+# usage: pass one argument to link into
+# and a second for a source that you're inserting.
+clangl() {
+        clang++ -o "$1" "$1.o" "$2.o"
+}
+

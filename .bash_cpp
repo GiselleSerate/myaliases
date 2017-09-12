@@ -1,19 +1,40 @@
 # vanilla compile; fully compile independent c++ file according to 70 standards
-# usage: pass one argument that does not contain the file extension
+# usage: pass one argument that does not contain the file extension.
+#	 an optional second argument specifies the file extension
 clangv() {
-        clang++ -std=c++11 -pedantic -Wall -Wextra "$1.cpp" -o "$1"
+	clang++ -std=c++11 -pedantic -Wall -Wextra "$1".cpp -o "$1${2:-}";
+}
+
+# a wrapper for clangv that immediately runs the output file after compilation
+# this is useful for quick debugging and editing
+clangc() {
+	clangv "$1" && ./"$1";
 }
 
 # partial compile c++ to output file
-# usage: pass one argument that does not contain the file extension
+# usage: pass one argument that does not contain the file extension.
+#	 an optional second argument specifies the file extension
 clangp() {
-	clang ++ -c -o "$1".o -std=c++11 -pedantic -Wall -Wextra "$1".cpp
+	clang++ -c -o "$1${:-.o}" -std=c++11 -pedantic -Wall -Wextra "$1".cpp;
 }
 
-# link c++ file according to 70 standards
-# usage: pass one argument to link into
-# and a second for a source that you're inserting.
+# link c++ file according to 70 standards and run the compiled program automatically
+# usage: pass one argument to link into and any other sources
+#	 that you're inserting as subsequent arguments in the
+#	 order of most dependent to least dependent.
+#	 leave off any file extensions
 clangl() {
-        clang++ -o "$1" "$1.o" "$2.o"
+	local ARGS=("$@") && clang++ -o "$1" ${ARGS[@]/%/.o} && ./"$1";
 }
 
+# a wrapper for clangl and clangp.
+# it partially compiles c++ to output files and then
+# links the ouput files according to 70 standards
+# and then runs the compiled program automatically
+# usage: pass one argument to link into and any other soures
+#	 that you're inserting as subsequent arguments in the
+#	 order of most dependent to least dependent.
+#	 leave off any file extensions
+clangcl() {
+	local args=("$@") && args=${args/#/" && clangp "} && eval ${args/" && "/} && clangl $@;
+}

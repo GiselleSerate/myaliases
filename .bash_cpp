@@ -4,6 +4,7 @@
 #	 don't include the dot in your second argument
 clangv() {
 	clang++ -std=c++11 -pedantic -Wall -Wextra "$1".cpp -o "$1${2+.}${2:-}";
+	echo clang++ -std=c++11 -pedantic -Wall -Wextra "$1".cpp -o "$1${2+.}${2:-}";
 }
 
 # a wrapper for clangv that immediately runs the output file after compilation
@@ -11,14 +12,18 @@ clangv() {
 # usage: same as clangv
 clangc() {
 	clangv "$@" && ./"$1${2+.}${2:-}";
+	echo clangv "$@" && ./"$1${2+.}${2:-}";
 }
+
 
 # partial compile c++ to output file
 # usage: pass one argument that does not contain the file extension.
 #	 an optional second argument specifies the file extension
 clangp() {
 	clang++ -c -o "$1${2:-.o}" -std=c++11 -pedantic -Wall -Wextra "$1".cpp;
+	echo clang++ -c -o "$1${2:-.o}" -std=c++11 -pedantic -Wall -Wextra "$1".cpp;
 }
+
 
 # link c++ file according to 70 standards and run the compiled program automatically
 # usage: pass one argument to link into and any other sources
@@ -27,6 +32,8 @@ clangp() {
 #	 leave off any file extensions
 clangl() {
 	local ARGS=("$@") && clang++ -o "$1" ${ARGS[@]/%/.o} && ./"$1";
+	echo clang++ -o "$1" ${ARGS[@]/%/.o};
+	echo ./"$1";
 }
 
 # a wrapper for clangl and clangp.
@@ -37,6 +44,7 @@ clangl() {
 #	 that you're inserting as subsequent arguments in the
 #	 order of most dependent to least dependent.
 #	 leave off any file extensions
+# TODO: Have not checked print in this function. 
 clangpl() {
 	local args=("$@") && args=${args/#/" && clangp "} && eval ${args/" && "/} && clangl $@;
 }

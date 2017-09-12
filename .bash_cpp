@@ -32,7 +32,7 @@ clangl() {
 # it partially compiles c++ to output files and then
 # links the ouput files according to 70 standards
 # and then runs the compiled program automatically
-# usage: pass one argument to link into and any other soures
+# usage: pass one argument to link into and any other sources
 #	 that you're inserting as subsequent arguments in the
 #	 order of most dependent to least dependent.
 #	 leave off any file extensions

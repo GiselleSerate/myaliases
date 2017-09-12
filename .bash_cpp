@@ -7,8 +7,9 @@ clangv() {
 
 # a wrapper for clangv that immediately runs the output file after compilation
 # this is useful for quick debugging and editing
+# usage: same as clangv
 clangc() {
-	clangv "$1" && ./"$1";
+	clangv "$@" && ./"$1${2:-}";
 }
 
 # partial compile c++ to output file

@@ -1,4 +1,4 @@
-# vanilla compile; fully compile independent c++ file according to 70 standards
+# Vanilla; fully compile independent c++ file
 # usage: pass one argument that does not contain the file extension.
 #	 an optional second argument specifies the file extension.
 #	 don't include the dot in your second argument
@@ -7,16 +7,16 @@ clangv() {
 	clang++ -std=c++11 -pedantic -Wall -Wextra "$1".cpp -o "$1${2+.}${2:-}";
 }
 
-# a wrapper for clangv that immediately runs the output file after compilation
+# Run; a wrapper for clangv that immediately runs the output file after compilation
 # this is useful for quick debugging and editing
 # usage: same as clangv
-clangc() {
+clangr() {
 	echo clangv "$@" && ./"$1${2+.}${2:-}";
 	clangv "$@" && ./"$1${2+.}${2:-}";
 }
 
 
-# partial compile c++ to output file
+# Partial; partially compile c++ to output file
 # usage: pass one argument that does not contain the file extension.
 #	 an optional second argument specifies the file extension
 #	 don't include the dot in your second argument
@@ -26,7 +26,7 @@ clangp() {
 }
 
 
-# link c++ file according to 70 standards and run the compiled program automatically
+# Link; link c++ file and run the compiled program automatically
 # usage: pass one argument to link into and any other sources
 #	 that you're inserting as subsequent arguments in the
 #	 order of most dependent to least dependent.
@@ -39,7 +39,7 @@ clangl() {
 	./"$1";
 }
 
-# a wrapper for clangl and clangp.
+# Total; a wrapper for clangl and clangp.
 # Partial compiles all inputs to .o output files, links these outputs, 
 # and then runs the final program.
 # usage: pass one argument to link into and any other sources

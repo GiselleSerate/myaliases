@@ -61,8 +61,21 @@ clangt() {
 #	 order of most dependent to least dependent.
 #	 leave off any file extensions
 clangd() {
+	local exec="false";
+	while getopts "e" option
+	do
+		case "$option"
+		in
+			e) echo hi && exec="true" && shift;;
+		esac
+	done
 	local ARGS=("$@");
 	clangt "$@";
-	echo Deleting all object and executable files: ${ARGS[@]/%/.o} "$1";
-	rm ${ARGS[@]/%/.o} "$1";
+	if [ "$exec" = "true" ] ; then
+		echo "Deleting all object and executable files: ${ARGS[@]/%/.o} $1";
+		rm ${ARGS[@]/%/.o} "$1";
+	else
+		echo "Deleting all object files: ${ARGS[@]/%/.o}";
+		rm ${ARGS[@]/%/.o};
+	fi
 }

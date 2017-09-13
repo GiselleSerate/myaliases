@@ -1,5 +1,5 @@
 # myaliases
-Bash aliases that I have found useful. 
+Bash aliases and functions for various things. If you're compiling C++ for Harvey Mudd's CS70 course, you will find .bash_cpp especially useful.
 
 # usage
 Clone this repository into `~` and add the following to your .bashrc for each file you want to use:

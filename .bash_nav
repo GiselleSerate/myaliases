@@ -4,8 +4,6 @@ alias subl='"/mnt/c/Program Files/Sublime Text 3/sublime_text.exe"'
 # wanna go to desktop
 alias desk='cd /mnt/c/Users/gsera/Desktop'
 
-# Source .bashrc and return to current directory.
-srcbash() {
-	local cwd=`pwd`;
-	cd ~ && source .bashrc && cd $cwd && echo .bashrc successfully sourced.;
-}
+# source bash
+
+alias srcbash='source ~/.bashrc'

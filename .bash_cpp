@@ -19,9 +19,10 @@ clangc() {
 # partial compile c++ to output file
 # usage: pass one argument that does not contain the file extension.
 #	 an optional second argument specifies the file extension
+#	 don't include the dot in your second argument
 clangp() {
-	echo clang++ -c -o "$1${2:-.o}" -std=c++11 -pedantic -Wall -Wextra "$1".cpp;
-	clang++ -c -o "$1${2:-.o}" -std=c++11 -pedantic -Wall -Wextra "$1".cpp;
+	echo clang++ -c -o "$1.${2:-o}" -std=c++11 -pedantic -Wall -Wextra "$1".cpp;
+	clang++ -c -o "$1.${2:-o}" -std=c++11 -pedantic -Wall -Wextra "$1".cpp;
 }
 
 
@@ -39,22 +40,6 @@ clangl() {
 }
 
 # a wrapper for clangl and clangp.
-# it partially compiles c++ to output files and then
-# links the ouput files according to 70 standards
-# and then runs the compiled program automatically
-# usage: pass one argument to link into and any other sources
-#	 that you're inserting as subsequent arguments in the
-#	 order of most dependent to least dependent.
-#	 leave off any file extensions
-clangpl() {
-	echo IFS;
-	local args=("$@");
-	args=${args[@]/#/" && clangp "};
-	echo ${args[@]/" && "/};
-	# clangl $@;
-}
-
-# a wrapper for clangl and clangp. Duplicates functionality of clangpl.
 # Partial compiles all inputs to .o output files, links these outputs, 
 # and then runs the final program.
 # usage: pass one argument to link into and any other sources

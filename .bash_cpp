@@ -56,22 +56,18 @@ clangt() {
 # Delete; a wrapper for clangt that cleans up once the program has been run.
 # Partial compiles all inputs to .o output files, links these outputs, 
 # and then runs the final program. Deletes all .o and executables.
-# usage: pass one argument to link into and any other sources
-#	 that you're inserting as subsequent arguments in the
-#	 order of most dependent to least dependent.
-#	 leave off any file extensions.
+# usage: same as clangl.
 #	 if you'd like to also delete the executable, specify the
 #	 -e option before all arguments
 clangd() {
-	local exec="false"
 	while getopts "e" opt; do
 		case ${opt} in
-			e) exec="true"; shift;;
+			e) local exec="true"; shift;;
 		esac
 	done
 	local ARGS=("$@");
 	clangt "$@";
-	if [ "$exec" = "true" ] ; then
+	if [ -n "$exec" ] ; then
 		echo "Deleting all object and executable files: ${ARGS[@]/%/.o} $1";
 		rm ${ARGS[@]/%/.o} "$1";
 	else

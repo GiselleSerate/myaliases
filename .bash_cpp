@@ -59,14 +59,14 @@ clangt() {
 # usage: pass one argument to link into and any other sources
 #	 that you're inserting as subsequent arguments in the
 #	 order of most dependent to least dependent.
-#	 leave off any file extensions
+#	 leave off any file extensions.
+#	 if you'd like to also delete the executable, specify the
+#	 -e option before all arguments
 clangd() {
-	local exec="false";
-	while getopts "e" option
-	do
-		case "$option"
-		in
-			e) echo hi && exec="true" && shift;;
+	local exec="false"
+	while getopts "e" opt; do
+		case ${opt} in
+			e) exec="true"; shift;;
 		esac
 	done
 	local ARGS=("$@");

@@ -52,3 +52,11 @@ clangt() {
 	done
 	clangl "$@";
 }
+
+clangd() {
+	local ARGS=("$@");
+	clangt "$@";
+	echo Deleting all external files.
+	echo rm ${ARGS[@]/%/.o} "$1";
+	rm ${ARGS[@]/%/.o} "$1";
+}

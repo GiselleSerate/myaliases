@@ -53,6 +53,13 @@ clangt() {
 	clangl "$@";
 }
 
+# Delete; a wrapper for clangt that cleans up once the program has been run.
+# Partial compiles all inputs to .o output files, links these outputs, 
+# and then runs the final program. Deletes all .o and executables.
+# usage: pass one argument to link into and any other sources
+#	 that you're inserting as subsequent arguments in the
+#	 order of most dependent to least dependent.
+#	 leave off any file extensions
 clangd() {
 	local ARGS=("$@");
 	clangt "$@";

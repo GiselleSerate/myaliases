@@ -56,7 +56,6 @@ clangt() {
 clangd() {
 	local ARGS=("$@");
 	clangt "$@";
-	echo Deleting all external files.
-	echo rm ${ARGS[@]/%/.o} "$1";
+	echo Deleting all object and executable files: ${ARGS[@]/%/.o} "$1";
 	rm ${ARGS[@]/%/.o} "$1";
 }

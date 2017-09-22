@@ -1,5 +1,6 @@
 # myaliases
 Bash aliases and functions for various things. If you're compiling C++ for Harvey Mudd's CS70 course, you will find .bash_cpp especially useful.
+
 EDIT: Makefiles do everything .bash_cpp does, but more efficiently and better. 
 
 # usage

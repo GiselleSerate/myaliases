@@ -8,6 +8,17 @@ valf() {
 	valgrind --leak-check=full ./"$1" 2>| "$1"-val.out
 }
 
+# Makes and then valgrinds a file.
+mval() {
+	make "$1"
+	val "$1"
+}
+
+# Makes and then valgrinds to a file
+mvalf() {
+	make "$1"
+	valf "$1"
+}
 
 # Vanilla; fully compile independent c++ file
 # usage: pass one argument that does not contain the file extension.

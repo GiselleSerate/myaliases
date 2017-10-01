@@ -7,3 +7,28 @@ alias desk='cd /mnt/c/Users/gsera/Desktop'
 # source bash
 
 alias srcbash='source ~/.bashrc'
+
+# ---This alias effectively creates a bookmarking app---
+# it adds global symlink shortcuts for use with the 'cds' command
+# ex: 'cds studycloud' will run 'cd -P ~/.short/studycloud'
+# to add a shortcut: go to the target directory and run 'cds + <shortcut_name>'
+# to remove a shortcut: run 'cds - <shortcut_name>'
+cds() {
+    if [ ! -d ~/.short ]; then
+        mkdir ~/.short
+    fi
+    if [ $1 = "+" ]; then
+        ln -s "$PWD" "$HOME/.short/$2"
+    elif [ $1 = "-" ]; then
+        rm ~/.short/$2
+    else
+        if [ -L ~/.short/$1 ]; then
+            cd -P ~/.short/$1
+        elif [ -d ./$1 ]; then
+            # this code is here because I often use cds instead of cd by mistake
+            cd $1
+        else
+            echo "error: that shortcut or directory doesn't exist"
+        fi
+    fi
+}

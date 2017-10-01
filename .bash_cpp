@@ -1,3 +1,14 @@
+# Valgrind run on file
+val() {
+	valgrind --leak-check=full ./"$1"
+}
+
+# Valgrind to file
+valf() {
+	valgrind --leak-check=full ./"$1" 2>| "$1"-val.out
+}
+
+
 # Vanilla; fully compile independent c++ file
 # usage: pass one argument that does not contain the file extension.
 #	 an optional second argument specifies the file extension.

@@ -33,8 +33,9 @@ clangv() {
 # this is useful for quick debugging and editing
 # usage: same as clangv
 clangr() {
-	echo clangv "$@" && ./"$1${2+.}${2:-}";
-	clangv "$@" && ./"$1${2+.}${2:-}";
+	clangv "$@";
+	echo ./"$1${2+.}${2:-}";
+	./"$1${2+.}${2:-}";
 }
 
 

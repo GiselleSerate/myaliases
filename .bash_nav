@@ -17,18 +17,21 @@ cds() {
     if [ ! -d ~/.short ]; then
         mkdir ~/.short
     fi
-    if [ $1 = "+" ]; then
-        ln -s "$PWD" "$HOME/.short/$2"
-    elif [ $1 = "-" ]; then
-        rm ~/.short/$2
+    if [ $# -eq 0 ]; then
+        ls ~/.short/
     else
-        if [ -L ~/.short/$1 ]; then
-            cd -P ~/.short/$1
-        elif [ -d ./$1 ]; then
-            # this code is here because I often use cds instead of cd by mistake
-            cd $1
+        if [ $1 = "+" ]; then
+            ln -s "$PWD" "$HOME/.short/$2"
+        elif [ $1 = "-" ]; then
+            rm ~/.short/$2
         else
-            echo "error: that shortcut or directory doesn't exist"
+            if [ -d ./$1 ]; then
+                cd $1
+            elif [ -L ~/.short/$1 ]; then
+                cd -P ~/.short/$1
+            else
+                echo "error: that directory or shortcut doesn't exist"
+            fi
         fi
     fi
 }

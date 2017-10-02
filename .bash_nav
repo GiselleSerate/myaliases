@@ -22,7 +22,7 @@ cds() {
     else
         if [ $1 = "+" ]; then
             ln -s "$PWD" "$HOME/.short/$2"
-        elif [ $1 = "-" ] && [ $# -eq 2 ]; then
+        elif [ $1 = "-" ] && [ $# -eq 2 ] && [ -L ~/.short/$2 ]; then
             rm ~/.short/$2
         else
             if [ -d ./$1 ] || [ $1 = "-" ]; then

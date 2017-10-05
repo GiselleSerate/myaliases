@@ -20,20 +20,18 @@ cds() {
     fi
     if [ $# -eq 1 ] && [ $1 = "." ]; then
         ls ~/.short/
-    else
-        if [ $# -eq 2 ] && [ $1 = "+" ]; then
+    elif [ $# -eq 2 ] && [ $1 = "+" ]; then
+        if [ $2 != "-" ]; then
             ln -s "$PWD" "$HOME/.short/$2"
-        elif [ $# -ge 2 ] && [ $1 = "-" ]; then
-            local args=( ${@:2} )
-            eval "rm ${args[@]/#/"~/.short/"}"
-        else
-            if [ $# -eq 0 ] || [ -d ./$1 ] || [ $1 = "-" ]; then
-                cd "$@"
-            elif [ -d "$(realpath ~/.short/$1)" ]; then
-                cd -P ~/.short/$1
-            else
-                echo "cd: $1: No such file or directory"
-            fi
         fi
+    elif [ $# -ge 2 ] && [ $1 = "-" ]; then
+        local args=( ${@:2} )
+        eval "rm ${args[@]/#/"~/.short/"}"
+    elif [ $# -eq 0 ] || [ -d ./$1 ] || [ $1 = "-" ]; then
+        cd "$@"
+    elif [ -d "$(realpath ~/.short/$1)" ]; then
+        cd -P ~/.short/$1
+    else
+        echo "cd: $1: No such file or directory"
     fi
 }

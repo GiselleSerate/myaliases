@@ -22,7 +22,7 @@ cds() {
         ls ~/.short/
     elif [ $# -eq 2 ] && [ $1 = "+" ]; then
         if [ $2 != "-" ]; then
-            ln -s "$PWD" "$HOME/.short/$2"
+            ln -sfn "$PWD" "$HOME/.short/$2"
         fi
     elif [ $# -ge 2 ] && [ $1 = "-" ]; then
         local args=( ${@:2} )

@@ -18,16 +18,16 @@ cds() {
     if [ ! -d ~/.short ]; then
         mkdir ~/.short
     fi
-    if [ $# -eq 1 ] && [ $1 = "." ]; then
+    if [ $# -eq 1 ] && [ "$1" = "." ]; then
         ls ~/.short/
-    elif [ $# -eq 2 ] && [ $1 = "+" ]; then
-        if [ $2 != "-" ]; then
+    elif [ $# -eq 2 ] && [ "$1" = "+" ]; then
+        if [ "$2" != "-" ]; then
             ln -sfn "$PWD" "$HOME/.short/$2"
         fi
-    elif [ $# -ge 2 ] && [ $1 = "-" ]; then
+    elif [ $# -ge 2 ] && [ "$1" = "-" ]; then
         local args=( ${@:2} )
         eval "rm ${args[@]/#/"~/.short/"}"
-    elif [ $# -eq 0 ] || [ -d $1 ] || [ $1 = "-" ]; then
+    elif [ $# -eq 0 ] || [ -d "$1" ] || [ "$1" = "-" ]; then
         cd "$@"
     elif [ -d "$(realpath ~/.short/$1)" ]; then
         cd -P ~/.short/$1

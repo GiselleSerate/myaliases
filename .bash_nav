@@ -5,5 +5,7 @@ alias subl='"/mnt/c/Program Files/Sublime Text 3/sublime_text.exe"'
 alias desk='cd /mnt/c/Users/gsera/Desktop'
 
 # source bash
-
 alias srcbash='source ~/.bashrc'
+
+# open windows file manager in the current directory
+alias explorer='/mnt/c/Windows/explorer.exe .'

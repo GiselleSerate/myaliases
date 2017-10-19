@@ -12,5 +12,7 @@ if [ -d '/mnt/c/Windows' ]; then
 fi
 
 # source bash
-
 alias srcbash='source ~/.bashrc'
+
+# open windows file manager in the current directory
+alias explorer='/mnt/c/Windows/explorer.exe .'

@@ -1,11 +1,15 @@
 # alias to run sublime text from anywhere
 alias subl='"/mnt/c/Program Files/Sublime Text 3/sublime_text.exe"'
 
-# if we ever want to call windows command line from bash
-alias cmd='/mnt/c/Windows/System32/cmd.exe /C'
+if [ -d '/mnt/c/Windows' ]; then
 
-# wanna go to desktop
-alias desk='cd /mnt/c/Users/$(cmd "echo | set /p=%USERNAME%")/Desktop'
+    # alias cmd for calling the windows command line from bash
+    alias cmd='/mnt/c/Windows/System32/cmd.exe /C'
+
+    # wanna go to desktop
+    alias desk='cd /mnt/c/Users/$(cmd "echo | set /p=%USERNAME%")/Desktop'
+
+fi
 
 # source bash
 

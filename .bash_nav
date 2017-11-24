@@ -17,3 +17,30 @@ fi
 # source bash
 alias srcbash='source ~/.bashrc'
 
+# ---This alias effectively creates a bookmarking app---
+# it adds global symlink shortcuts for use with the 'cds' command
+# ex: 'cds studycloud' will run 'cd -P ~/.short/studycloud'
+# to add a shortcut: go to the target directory and run 'cds + <shortcut_name>' or 'cds + .' to use the current directory name
+# to remove a shortcut: run 'cds - <shortcut_name>' (you can also tack on multiple shortcut names separated by spaces)
+# to list your shortcuts: run 'cds .'
+cds() {
+    if [ ! -d ~/.short ]; then
+        mkdir ~/.short
+    fi
+    if [ $# -eq 1 ] && [ "$1" = "." ]; then
+        ls ~/.short/
+    elif [ $# -eq 2 ] && [ "$1" = "+" ]; then
+        if [ "$2" != "-" ]; then
+            ln -sfn "$PWD" "$HOME/.short/$2"
+        fi
+    elif [ $# -ge 2 ] && [ "$1" = "-" ]; then
+        local args=( ${@:2} )
+        eval "rm ${args[@]/#/"~/.short/"}"
+    elif [ $# -eq 0 ] || [ -d "$1" ] || [ "$1" = "-" ]; then
+        cd "$@"
+    elif [ -d "$(realpath ~/.short/$1)" ]; then
+        cd -P ~/.short/$1
+    else
+        echo "cd: $1: No such file or directory"
+    fi
+}

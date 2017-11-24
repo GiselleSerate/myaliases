@@ -1,11 +1,20 @@
 # alias to run sublime text from anywhere
 alias subl='"/mnt/c/Program Files/Sublime Text 3/sublime_text.exe"'
 
-# wanna go to desktop
-alias desk='cd /mnt/c/Users/gsera/Desktop'
+if [ -d '/mnt/c/Windows' ]; then
+
+    # alias cmd for calling the windows command line from bash
+    alias cmd='/mnt/c/Windows/System32/cmd.exe /C'
+
+    # wanna go to desktop
+    alias desk='cd /mnt/c/Users/$(cmd "echo | set /p=%USERNAME%")/Desktop'
+
+    # open windows file manager in the current directory
+    alias explorer='/mnt/c/Windows/explorer.exe .'
+
+fi
 
 # source bash
-
 alias srcbash='source ~/.bashrc'
 
 # ---This alias effectively creates a bookmarking app---

@@ -1,1 +1,9 @@
 alias serve='php artisan serve &>/dev/null &'
+
+# Run background serve commands without taking up a terminal window. 
+bgsrv() {
+	# Start web server.
+	php artisan serve &>/dev/null &
+	# Start watching sass files for changes.
+	npm run watch &>/dev/null &
+}

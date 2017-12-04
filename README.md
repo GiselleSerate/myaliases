@@ -10,7 +10,7 @@ if [ -f ~/myaliases/.bash_cpp ]; then
   . ~/myaliases/.bash_cpp
 fi
 ```
-When you're done, remember to run `source .bashrc` from `~`. 
+When you're done, remember to run `source ~/.bashrc`. 
 
 # thanks
 Feel free to fork and use/modify as you please. 

@@ -1,3 +1,6 @@
+# Consider using a real Makefile instead of this file. Real Makefiles are actually built for this
+# and you can do all of this in a Makefile. 
+
 # Valgrind run on file
 val() {
 	valgrind --leak-check=full ./"$1"

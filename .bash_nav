@@ -38,7 +38,7 @@ cds() {
         eval "rm ${args[@]/#/"~/.short/"}"
     elif [ $# -eq 0 ] || [ -d "$1" ] || [ "$1" = "-" ]; then
         cd "$@"
-    elif [ -d "$(realpath ~/.short/$1)" ]; then
+    elif [ -d "$(readlink -f ~/.short/$1)" ]; then
         cd -P ~/.short/$1
     else
         echo "cd: $1: No such file or directory"

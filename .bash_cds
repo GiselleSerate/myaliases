@@ -16,6 +16,7 @@ cds() {
         fi
     elif [ $# -ge 2 ] && [ "$1" = "-" ]; then
         local args=( ${@:2} )
+        args=( ${args[@]%/} )
         eval "rm ${args[@]/#/"~/.short/"}"
     elif [ $# -eq 0 ] || [ -d "$1" ] || [ "$1" = "-" ]; then
         cd "$@"
@@ -31,6 +32,13 @@ _cds() {
     # array variable storing the possible completions
     COMPREPLY=()
     # the current completion word
-    local word="${COMP_WORDS[COMP_CWORD]}"    
+    local word="${COMP_WORDS[COMP_CWORD]}"
+    if [ "$3" = "-" ]; then
+        COMPREPLY+=( $(compgen -W "$(ls $HOME/.short/)" -- "$word") )
+    fi
 }
-#complete -F _cds cds   # command to enable cds tab-completion
+# command to enable cds tab-completion
+# filenames tag tells bash to treat completions as filenames
+# nospace tells it to not put a space afterward
+# and bashdefault brings in the rest of the "Bash default" completions
+complete -o filenames -o nospace -o bashdefault -F _cds cds

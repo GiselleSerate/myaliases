@@ -46,9 +46,16 @@ _cds() {
         local shortcut=$(cut -d/ -f1 <<< "$2")
         local sympath=$(readlink -f ~/.short/$shortcut)
         # if the user is using a cds shortcut
-        if [ "$shortcut" != "" ] && [ -d $sympath ]; then
-            # change COMP_POINT, COMP_LINE, COMP_WORDS, COMP_WORDBREAKS, COMP_CWORD before calling _cd
+        if [ "$shortcut" != "" ] && [ -d "$sympath" ]; then
+            totalpath="$sympath/${2#*/}"
+            # fake a regular call to _cd. it won't even know the difference ;p
+            COMP_LINE="cd $totalpath"
+            COMP_POINT=${#COMP_LINE}
+            COMP_WORDS[0]="cd"
+            COMP_WORDS[1]="$totalpath"
             _cd
+            # replace all instances of the fullpath name with the shortcut name
+            COMPREPLY=( "${COMPREPLY[@]/$sympath/$shortcut}" )
         # otherwise, the user is just typing a regular path
         else
             _cd

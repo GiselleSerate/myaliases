@@ -1,6 +1,6 @@
 # ---This alias effectively creates a bookmarking app---
 # it adds global symlink shortcuts for use with the 'cds' command
-# ex: 'cds studycloud' will run 'cd -P ~/.short/studycloud'
+# ex) 'cds studycloud' will run 'cd -P ~/.short/studycloud'
 # to add a shortcut: go to the target directory and run 'cds + <shortcut_name>' or 'cds + .' to use the current directory name
 # to remove a shortcut: run 'cds - <shortcut_name>' (you can also tack on multiple shortcut names separated by spaces)
 # to list your shortcuts: run 'cds .'

@@ -77,4 +77,4 @@ if test -n "$ZSH_VERSION"; then
     autoload -Uz bashcompinit
     bashcompinit -i
 fi
-complete -o nospace -F _cds cds
+complete -o nospace -o default -F _cds cds

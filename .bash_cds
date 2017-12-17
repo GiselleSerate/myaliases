@@ -62,8 +62,19 @@ _cds() {
         fi
     fi
 }
+_cds_zsh() {
+    read -l
+    local cl="$REPLY"
+    read -ln
+    local cp="$REPLY"
+    reply=(`COMP_LINE="$cl" COMP_POINT="$cp" _cds`)
+}
 # command to enable cds tab-completion
 # filenames tag tells bash to treat completions as filenames
 # nospace tells it to not put a space afterward
 # and bashdefault brings in the rest of the "Bash default" completions
-complete -o filenames -o nospace -o bashdefault -F _cds cds
+if test -n "$ZSH_VERSION"; then
+    autoload -Uz bashcompinit
+    bashcompinit -i
+fi
+complete -o nospace -F _cds cds

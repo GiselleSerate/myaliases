@@ -1,0 +1,15 @@
+#!/bin/bash
+
+# echo "if [ -f ~/myaliases/.bash_cpp ]; then
+#	. ~/myaliases/.bash_cpp" | ed .bashaliases
+
+FILES="./.bash_*"
+
+echo "There are $# arguments."
+
+# Iterate over arguments. 
+for argn in $@
+do
+# Append .bash_ to each and print out contents..
+	cat "$(readlink -f "./.bash_${argn}")"
+done 

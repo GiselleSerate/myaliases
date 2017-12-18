@@ -20,7 +20,7 @@ cds() {
         eval "rm ${args[@]/#/"~/.short/"}"
     elif [ $# -eq 0 ] || [ -d "$1" ] || [ "$1" = "-" ]; then
         cd "$@"
-    elif [ -d "$(realpath ~/.short/$1)" ]; then
+    elif [ -d "$(realpath ~/.short/$1 2>/dev/null)" ]; then
         cd -P ~/.short/$1
     else
         echo "cd: $1: No such file or directory"
@@ -46,10 +46,13 @@ _cds() {
     # tab completion for 'cds /[tab]', 'cds <letter(s)>/[tab]', 'cds <letter(s)>/<letter(s)>/[tab], or some variation with a slash
     # needs to go find subdirectories
     elif [ "$1" = "$3" ]; then
+        # get the name of the shortcut (ie the text before the first slash)
         local shortcut=$(cut -d/ -f1 <<< "$word")
+        # get the absolute path to the shortcut symlink
         local sympath=$(realpath ~/.short/$shortcut)
         # if the user is using a cds shortcut
         if [ "$shortcut" != "" ] && [ -d "$sympath" ]; then
+            # the absolute path of the text that the user is typing
             totalpath="$sympath/${word#*/}"
             # fake a regular call to _cd. it won't even know the difference ;p
             COMP_LINE="cd $totalpath"
@@ -59,10 +62,9 @@ _cds() {
             _cd
             # replace all instances of the fullpath name with the shortcut name
             COMPREPLY=( "${COMPREPLY[@]/$sympath/$shortcut}" )
-            COMPREPLY=( "${COMPREPLY[@]/%//}" ) # append a slash to every completion
-        # otherwise, the user is just typing a regular path
+            COMPREPLY=( "${COMPREPLY[@]/%//}" ) # append a slash to every completion 
         else
-            _cd
+            _cd # otherwise, the user is just typing a regular path
         fi
     fi
 }

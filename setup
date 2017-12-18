@@ -41,4 +41,4 @@ handle "./.included" ~/.bash_aliases
 
 # Source the bashrc to save changes. 
 # Hold off on uncommenting until you know this works for sure.
-# source ~/.bashrc
+source ~/.bashrc

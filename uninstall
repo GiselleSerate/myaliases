@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # Delete the include lines from ~/.bash_aliases. 
 # Finds comment and deletes 4 lines beginning from that one. 

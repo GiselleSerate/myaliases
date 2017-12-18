@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # Handle: given a file as a first argument,
 # include it in a file given as a second arg
@@ -41,4 +41,4 @@ handle "./.included" ~/.bash_aliases
 
 # Source the bashrc to save changes. 
 # Hold off on uncommenting until you know this works for sure.
-source ~/.bashrc
+. ~/.bashrc

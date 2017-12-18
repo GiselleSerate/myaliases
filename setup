@@ -29,9 +29,10 @@ fi
 
 IN_FLAG="# myaliases included"
 
-# If the .bashrc doesn't already include .included, make it do that.
-if ! grep -Fxq "$IN_FLAG" "~/.bash_aliases"; then
-	cat "./.incln" >> "./.testbash"
+# If .bash_aliases doesn't already include .included, make it do that.
+if ! grep -Fxq "$IN_FLAG" ~/.bash_aliases; then
+	echo "Including files in your .bash_aliases."
+	cat "./.incln" >> ~/.bash_aliases
 fi
 
 # Source the bashrc to save changes. 

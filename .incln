@@ -1,0 +1,5 @@
+# myaliases included
+
+if [ -f $(readlink ./.included) ]; then
+	cat ". $(readlink ./.included)"
+fi

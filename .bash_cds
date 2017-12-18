@@ -35,19 +35,22 @@ _cds() {
     local word="${COMP_WORDS[COMP_CWORD]}"
     # tab completion for 'cds + [tab]', 'cds - [tab]', 'cds + <letter(s)>[tab]', or 'cds - <letter(s)>[tab]', 'cds [tab]', or 'cds <letter(s)>[tab]'
     # is simply the list of current shortcuts
-    if [ "$3" = "-" ] || [ "$3" = "+" ] || ( [ "$1" = "$3" ] && [ "${2/'/'}" = "$2" ] ); then 
+    if [ "$3" = "-" ] || [ "$3" = "+" ] || ( [ "$1" = "$3" ] && [ "${word/'/'}" = "$word" ] ); then 
+        local temp_reply=( $(compgen -W "$(ls $HOME/.short/)" -- "$word") )
+        # if there isn't anything (like a - or +) in front of the word we are completing
         if [ "$1" = "$3" ]; then
             _cd
+            temp_reply=( "${temp_reply[@]/%//}" ) # append a slash to cds's completions
         fi
-        COMPREPLY+=( $(compgen -W "$(ls $HOME/.short/)" -- "$word") )
+        COMPREPLY+=( "${temp_reply[@]}" )
     # tab completion for 'cds /[tab]', 'cds <letter(s)>/[tab]', 'cds <letter(s)>/<letter(s)>/[tab], or some variation with a slash
     # needs to go find subdirectories
     elif [ "$1" = "$3" ]; then
-        local shortcut=$(cut -d/ -f1 <<< "$2")
+        local shortcut=$(cut -d/ -f1 <<< "$word")
         local sympath=$(readlink -f ~/.short/$shortcut)
         # if the user is using a cds shortcut
         if [ "$shortcut" != "" ] && [ -d "$sympath" ]; then
-            totalpath="$sympath/${2#*/}"
+            totalpath="$sympath/${word#*/}"
             # fake a regular call to _cd. it won't even know the difference ;p
             COMP_LINE="cd $totalpath"
             COMP_POINT=${#COMP_LINE}
@@ -56,6 +59,7 @@ _cds() {
             _cd
             # replace all instances of the fullpath name with the shortcut name
             COMPREPLY=( "${COMPREPLY[@]/$sympath/$shortcut}" )
+            COMPREPLY=( "${COMPREPLY[@]/%//}" ) # append a slash to every completion
         # otherwise, the user is just typing a regular path
         else
             _cd
@@ -67,3 +71,4 @@ _cds() {
 if test -n "$BASH_VERSION"; then
     complete -o nospace -F _cds cds
 fi
+

@@ -1,8 +1,8 @@
 #!/bin/bash
 
-# Delete the include line from ~/.bash_aliases.
-# Use local temp file for now. 
-printf 'g/^# myaliases/\n.,+2d\nwq\n' | ed ./.temp
+# Delete the include lines from ~/.bash_aliases. 
+# Finds comment and deletes 4 lines beginning from that one. 
+printf 'g/^# myaliases/\n.,+3d\nwq\n' | ed -s ~/.bash_aliases
 
 # Delete our generated file.
 rm "./.included"

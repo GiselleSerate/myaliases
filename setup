@@ -4,12 +4,12 @@
 # include it in a file given as a second arg
 # if it is not already there.
 handle () {
-	if ! grep -Fxq "# myaliases: include $1" $2; then # Sorry about this tabbing. 
-		echo "# myaliases: include $1" >> $2
+	if ! grep -Fxq "# myaliases: include $1" "$2"; then # Sorry about this tabbing. 
+		echo "# myaliases: include $1" >> "$2"
 		echo "Including $1."
-		echo "if [ -f $(./realpath $1) ]; then
-	. $(./realpath $1)
-fi" >> $2
+		echo "if [ -f $(./realpath "$1") ]; then
+	. $(./realpath "$1")
+fi" >> "$2"
 	fi
 }
 
@@ -25,14 +25,14 @@ FILES="./.bash_*"
 if [ $# = 0 ]; then
 	for f in $FILES
 	do
-		handle $(./realpath $f) "./.included"
+		handle "$(./realpath "$f")" "./.included"
 	done
 else
 	# Iterate over arguments. 
-	for arg in $@
+	for arg in "$@"
 	do
 		# Convert to a path, appending .bash_ to each argument.
-		handle $(./realpath "./.bash_${arg}") "./.included"
+		handle "$(./realpath "./.bash_${arg}")" "./.included"
 	done
 fi
 

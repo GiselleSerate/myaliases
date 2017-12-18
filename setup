@@ -25,14 +25,14 @@ FILES="./.bash_*"
 if [ $# = 0 ]; then
 	for f in $FILES
 	do
-		handle "$f" "./.included"
+		handle $(./realpath $f) "./.included"
 	done
 else
 	# Iterate over arguments. 
-	for argn in $@
+	for arg in $@
 	do
 		# Convert to a path, appending .bash_ to each argument.
-		handle $(./realpath -f "./.bash_${argn}") $(./realpath -f "./.included")
+		handle $(./realpath "./.bash_${arg}") "./.included"
 	done
 fi
 

@@ -17,6 +17,9 @@ fi" >> "$2"
 if [ ! -f ./.included ]; then
 	echo "File ./.included does not exist. Creating."
 	touch ./.included
+	# Set up global var for the path to this directory.
+	# echo "REPO=$PWD" >> ./.included
+	echo $(dirname "$0")
 fi
 
 FILES="./.bash_*"

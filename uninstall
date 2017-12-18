@@ -1,0 +1,8 @@
+#!/bin/bash
+
+# Delete the include line from ~/.bash_aliases.
+# Use local temp file for now. 
+printf 'g/^# myaliases/\n.,+2d\nwq\n' | ed ./.temp
+
+# Delete our generated file.
+rm "./.included"

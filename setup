@@ -4,8 +4,9 @@
 # include it in a file given as a second arg
 # if it is not already there.
 handle () {
-	if ! grep -Fxq "$1" $2; then # Sorry about this tabbing. 
-		echo "Adding line about $(realpath $1)."
+	if ! grep -Fxq "# $1" $2; then # Sorry about this tabbing. 
+		echo "# $1" >> $2
+		echo "Including $1."
 		echo "if [ -f $(realpath $1) ]; then
 	. $(realpath $1)
 fi" >> $2
@@ -36,7 +37,7 @@ else
 fi
 
 # If .bash_aliases doesn't already include .included, make it do that.
-handle "./.incln" ./.bash_aliases
+handle "./.included" ~/.bash_aliases
 
 # Source the bashrc to save changes. 
 # Hold off on uncommenting until you know this works for sure.

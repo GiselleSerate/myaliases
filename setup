@@ -4,11 +4,11 @@
 # include it in a file given as a second arg
 # if it is not already there.
 handle () {
-	if ! grep -Fxq "# $1" $2; then # Sorry about this tabbing. 
+	if ! grep -Fxq "# myaliases: include $1" $2; then # Sorry about this tabbing. 
 		echo "# myaliases: include $1" >> $2
 		echo "Including $1."
-		echo "if [ -f $(realpath $1) ]; then
-	. $(realpath $1)
+		echo "if [ -f $(./realpath $1) ]; then
+	. $(./realpath $1)
 fi" >> $2
 	fi
 }
@@ -32,7 +32,7 @@ else
 	for argn in $@
 	do
 		# Convert to a path, appending .bash_ to each argument.
-		handle $(realpath -f "./.bash_${argn}") $(realpath -f "./.included")
+		handle $(./realpath -f "./.bash_${argn}") $(./realpath -f "./.included")
 	done
 fi
 

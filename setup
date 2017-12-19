@@ -7,40 +7,42 @@ handle () {
 	if ! grep -Fxq "# myaliases: include $1" "$2"; then # Sorry about this tabbing. 
 		echo "# myaliases: include $1" >> "$2"
 		echo "Including $1."
-		echo "if [ -f $(./realpath "$1") ]; then
-	. $(./realpath "$1")
+		echo "if [ -f $($ABSPATH/realpath "$1") ]; then
+	. $($ABSPATH/realpath "$1")
 fi" >> "$2"
 	fi
 }
+
+# This is the absolute path to the repo. 
+ABSPATH=$($(dirname "$0")/realpath $(dirname "$0"))
 
 # Make sure that included exists before you begin.
 if [ ! -f ./.included ]; then
 	echo "File ./.included does not exist. Creating."
 	touch ./.included
 	# Set up global var for the path to this directory.
-	# echo "REPO=$PWD" >> ./.included
-	echo $(dirname "$0")
+	echo "ABSPATH=$ABSPATH" >> ./.included
 fi
 
-FILES="./.bash_*"
+FILES="$ABSPATH/.bash_*"
 
 # If there are no arguments, then include all.
 if [ $# = 0 ]; then
 	for f in $FILES
 	do
-		handle "$(./realpath "$f")" "./.included"
+		handle "$($ABSPATH/realpath "$f")" "$ABSPATH/.included"
 	done
 else
 	# Iterate over arguments. 
 	for arg in "$@"
 	do
 		# Convert to a path, appending .bash_ to each argument.
-		handle "$(./realpath "./.bash_${arg}")" "./.included"
+		handle "$($ABSPATH/realpath "$ABSPATH/.bash_${arg}")" "$ABSPATH/.included"
 	done
 fi
 
 # If .bash_aliases doesn't already include .included, make it do that.
-handle "./.included" ~/.bash_aliases
+handle "$ABSPATH/.included" ~/.bash_aliases
 
 # Source the bashrc to save changes. 
 . ~/.bashrc

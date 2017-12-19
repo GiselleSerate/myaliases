@@ -1,0 +1,79 @@
+ABSPATH="$HOME/.myaliases" # delete this line when the code gets merged
+# ---This alias effectively creates a bookmarking app---
+# it adds global symlink shortcuts for use with the 'cds' command
+# ex) 'cds studycloud' will run 'cd -P ~/.myaliases/.short/studycloud'
+# to add a shortcut: go to the target directory and run 'cds + <shortcut_name>' or 'cds + .' to use the current directory name
+# to remove a shortcut: run 'cds - <shortcut_name>' (you can also tack on multiple shortcut names separated by spaces)
+# to list your shortcuts: run 'cds .'
+cds() {
+    local SHORT_PATH="$ABSPATH/.short"
+    if [ ! -d "$SHORT_PATH" ]; then
+        mkdir "$SHORT_PATH"
+    fi
+    if [ $# -eq 1 ] && [ "$1" = "." ]; then
+        ls "$SHORT_PATH"
+    elif [ $# -eq 2 ] && [ "$1" = "+" ]; then
+        if [ "$2" != "-" ]; then
+            ln -sfn "$PWD" "$SHORT_PATH/$2"
+        fi
+    elif [ $# -ge 2 ] && [ "$1" = "-" ]; then
+        local args=( ${@:2} )
+        args=( ${args[@]%/} )
+        eval "rm ${args[@]/#/"$SHORT_PATH/"}"
+    elif [ $# -eq 0 ] || [ -d "$1" ] || [ "$1" = "-" ]; then
+        cd "$@"
+    elif [ -d "$($ABSPATH/realpath $SHORT_PATH/$1 2>/dev/null)" ]; then
+        cd -P "$SHORT_PATH/$1"
+    else
+        echo "cd: $1: No such file or directory"
+    fi
+}
+
+# a custom tab-completion function for cds
+_cds() {
+    local SHORT_PATH="$ABSPATH/.short"
+    # array variable storing the possible completions
+    COMPREPLY=()
+    # the current completion word
+    local word="${COMP_WORDS[COMP_CWORD]}"
+    # tab completion for 'cds + [tab]', 'cds - [tab]', 'cds + <letter(s)>[tab]', or 'cds - <letter(s)>[tab]', 'cds [tab]', or 'cds <letter(s)>[tab]'
+    # is simply the list of current shortcuts
+    if [ "$3" = "-" ] || [ "$3" = "+" ] || ( [ "$1" = "$3" ] && [ "${word/'/'}" = "$word" ] ); then 
+        local temp_reply=( $(compgen -W "$(ls $SHORT_PATH)" -- "$word") )
+        # if there isn't anything (like a - or +) in front of the word we are completing
+        if [ "$1" = "$3" ]; then
+            _cd
+            temp_reply=( "${temp_reply[@]/%//}" ) # append a slash to cds's completions
+        fi
+        COMPREPLY+=( "${temp_reply[@]}" )
+    # tab completion for 'cds /[tab]', 'cds <letter(s)>/[tab]', 'cds <letter(s)>/<letter(s)>/[tab], or some variation with a slash
+    # needs to go find subdirectories
+    elif [ "$1" = "$3" ]; then
+        # get the name of the shortcut (ie the text before the first slash)
+        local shortcut=$(cut -d/ -f1 <<< "$word")
+        # get the absolute path to the shortcut symlink
+        local sympath=$($ABSPATH/realpath "$SHORT_PATH/$shortcut")
+        # if the user is using a cds shortcut
+        if [ "$shortcut" != "" ] && [ -d "$sympath" ]; then
+            # the absolute path of the text that the user is typing
+            totalpath="$sympath/${word#*/}"
+            # fake a regular call to _cd. it won't even know the difference ;p
+            COMP_LINE="cd $totalpath"
+            COMP_POINT=${#COMP_LINE}
+            COMP_WORDS[0]="cd"
+            COMP_WORDS[1]="$totalpath"
+            _cd
+            # replace all instances of the fullpath name with the shortcut name
+            COMPREPLY=( "${COMPREPLY[@]/$sympath/$shortcut}" )
+            COMPREPLY=( "${COMPREPLY[@]/%//}" ) # append a slash to every completion 
+        else
+            _cd # otherwise, the user is just typing a regular path
+        fi
+    fi
+}
+# command to enable cds tab-completion
+# nospace tells it to not put a space afterward
+if test -n "$BASH_VERSION"; then
+    complete -o nospace -F _cds cds
+fi
+

@@ -19,7 +19,7 @@ src() {
 	if [ "$SHELL" = "/bin/bash" ]; then
 		. ~/.bashrc
 		echo "~/.bashrc sourced."
-	elif [ "$SHELL" = "/bin/zsh"]; then
+	elif [ "$SHELL" = "/bin/zsh" ]; then
 		. ~/.zshrc
 		echo "~/.zshrc sourced."
 	else

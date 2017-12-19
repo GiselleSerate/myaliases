@@ -16,10 +16,10 @@ fi
 
 # Source the base file for whatever shell you're running.
 src() {
-	if [ $SHELL="/bin/bash" ]; then
+	if [ "$SHELL" = "/bin/bash" ]; then
 		. ~/.bashrc
 		echo "~/.bashrc sourced."
-	elif [ $SHELL="/bin/zsh"]; then
+	elif [ "$SHELL" = "/bin/zsh"]; then
 		. ~/.zshrc
 		echo "~/.zshrc sourced."
 	else

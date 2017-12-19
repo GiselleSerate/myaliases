@@ -51,4 +51,12 @@ fi
 handle "$ABSPATH/.included" ~/.bash_aliases
 
 # Source the bashrc to save changes. 
-. ~/.bashrc
+if [ "$SHELL" = "/bin/bash" ]; then
+	echo "You are running bash."
+	. ~/.bashrc
+elif [ "$SHELL" = "/bin/zsh" ]; then
+	echo "You are running zsh."
+	. ~/.zshrc
+else
+	echo "We don't currently support your shell. Please source your equivalent of .bashrc on your own."
+fi

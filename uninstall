@@ -1,10 +1,12 @@
 #!/bin/sh
 
+repo=$($(dirname "$0")/realpath $(dirname "$0))
+
 # Delete the include lines from ~/.bash_aliases. 
 # Finds comment and deletes 4 lines beginning from that one. 
 printf 'g/^# myaliases/\n.,+3d\nwq\n' | ed -s ~/.bash_aliases > /dev/null 2>&1
 
 # Delete our generated file.
-rm "$ABSPATH/.included"
+rm "$repo/.included"
 
 echo "Uninstall complete."

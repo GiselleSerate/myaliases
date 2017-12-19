@@ -5,6 +5,6 @@
 printf 'g/^# myaliases/\n.,+3d\nwq\n' | ed -s ~/.bash_aliases > /dev/null 2>&1
 
 # Delete our generated file.
-rm "./.included"
+rm "$ABSPATH/.included"
 
 echo "Uninstall complete."

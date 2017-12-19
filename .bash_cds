@@ -1,4 +1,3 @@
-ABSPATH="$HOME/.myaliases" # delete this line when the code gets merged
 # ---This alias effectively creates a bookmarking app---
 # it adds global symlink shortcuts for use with the 'cds' command
 # ex) 'cds studycloud' will run 'cd -P ~/.myaliases/.short/studycloud'

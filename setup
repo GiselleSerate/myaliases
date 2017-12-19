@@ -54,9 +54,6 @@ handle "$ABSPATH/.included" ~/.bash_aliases
 if [ "$SHELL" = "/bin/bash" ]; then
 	echo "You are running bash."
 	. ~/.bashrc
-elif [ "$SHELL" = "/bin/zsh" ]; then
-	echo "You are running zsh."
-	. ~/.zshrc
 else
 	echo "We don't currently support your shell. Please source your equivalent of .bashrc on your own."
 fi

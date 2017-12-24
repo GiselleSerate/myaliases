@@ -44,13 +44,6 @@ _cds() {
             _cd
             temp_reply=( "${temp_reply[@]/%//}" ) # append a slash to cds's completions
         fi
-        # if the first parameter to cds is "-"
-        if [ "${COMP_WORDS[1]}" = "-" ]; then
-            # remove any shortcut names that have already been typed from the completions
-            for shortcut in "${COMP_WORDS[@]:2}"; do
-                echo $shortcut
-            done
-        fi
         COMPREPLY+=( "${temp_reply[@]}" )
     # tab completion for 'cds /[tab]', 'cds <letter(s)>/[tab]', 'cds <letter(s)>/<letter(s)>/[tab], or some variation with a slash
     # needs to go find subdirectories

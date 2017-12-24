@@ -37,7 +37,7 @@ _cds() {
     local word="${COMP_WORDS[COMP_CWORD]}"
     # tab completion for 'cds + [tab]', 'cds - [tab]', 'cds + <letter(s)>[tab]', or 'cds - <letter(s)>[tab]', 'cds [tab]', or 'cds <letter(s)>[tab]'
     # is simply the list of current shortcuts
-    if [ "$3" = "-" ] || [ "$3" = "+" ] || ( [ "$1" = "$3" ] && [ "${word/'/'}" = "$word" ] ); then 
+    if [ "$3" = "+" ] || ( [ "$1" = "$3" ] && [ "${word/'/'}" = "$word" ] ); then 
         local temp_reply=( $(compgen -W "$(ls $SHORT_PATH)" -- "$word") )
         # if there isn't anything (like a - or +) in front of the word we are completing
         if [ "$1" = "$3" ]; then
@@ -45,6 +45,11 @@ _cds() {
             temp_reply=( "${temp_reply[@]/%//}" ) # append a slash to cds's completions
         fi
         COMPREPLY+=( "${temp_reply[@]}" )
+    # tab completion for 'cds - [tab]'
+    elif [ "${COMP_WORDS[1]}" = "-" ]; then
+        for shortcut in "${COMP_WORDS[@]:2}"; do
+            echo $shortcut
+        done
     # tab completion for 'cds /[tab]', 'cds <letter(s)>/[tab]', 'cds <letter(s)>/<letter(s)>/[tab], or some variation with a slash
     # needs to go find subdirectories
     elif [ "$1" = "$3" ]; then

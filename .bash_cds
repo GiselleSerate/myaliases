@@ -73,6 +73,6 @@ _cds() {
 # command to enable cds tab-completion
 # nospace tells it to not put a space afterward
 if test -n "$BASH_VERSION"; then
-    complete -o nospace -F _cds cds
+    type _cd  &>/dev/null && complete -o nospace -F _cds cds
 fi
 

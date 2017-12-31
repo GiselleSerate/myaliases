@@ -6,19 +6,20 @@ addalias() {
 	# This will be your option. If it is set, paste everything into the .usr_aliases file. 
 	echo ${args[$#-1]}
 	if [[ "${args[$#-1]}" == "-p" ]]; then
-		echo "We have a -p option activated."
+		echo "Writing persistent alias."
 		if [ ! -f $ABSPATH/.usr_aliases ]; then
 			echo "File .usr_aliases does not exist. Creating."
 			touch $ABSPATH/.usr_aliases
 		fi
 		# Blindly adds aliases to file currently. Should at least check whether it exists?
 		# echo "alias \""$2"\"=\""$3"\"" >> $ABSPATH/.usr_aliases;
-		for arg in ${args[@]}
-		{
-			echo $arg
+		allargs="$*"
+		echo "$allargs"
+		echo "${allargs%??}"
+		for arg in "$@"; do
 			if [[ $arg != "-p" ]]; then
-				echo "We're NOT the option."
+				echo $arg
 			fi
-		}
+		done
 	fi
 }

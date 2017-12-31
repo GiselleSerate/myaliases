@@ -1,5 +1,5 @@
 # myaliases
-Bash aliases and functions for various things.
+Bash aliases and functions for various tasks, particularly file system navigation. Highlights include `cds`, a file system shortcut manager.
 
 # setup
 Clone this repository and run the `setup` script to get started. 
@@ -26,4 +26,4 @@ If you run our uninstall scripts, we will not delete these lines out of your con
 For more details on how usage changes based on your shell, see the [wiki](https://github.com/GiselleSerate/myaliases/wiki/Supported-Systems).
 
 # thanks
-Feel free to fork and use/modify as you please. Got some useful aliases to share? We consider pull requests. 
+Feel free to fork and use/modify as you please. Got some useful aliases to share? We'd love to consider your pull requests. 

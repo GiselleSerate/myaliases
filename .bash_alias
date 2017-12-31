@@ -13,9 +13,10 @@ addalias() {
 		fi
 		# Blindly adds aliases to file currently. Should at least check whether it exists?
 		# echo "alias \""$2"\"=\""$3"\"" >> $ABSPATH/.usr_aliases;
+		echo [[ "$*" ]]
 		allargs="$*"
 		echo "$allargs"
-		echo "${allargs%??}"
+		echo "${allargs%-p}"
 		for arg in "$@"; do
 			if [[ $arg != "-p" ]]; then
 				echo $arg

@@ -1,0 +1,9 @@
+# Add an alias.
+add() {
+	if [ ! -f $ABSPATH/.usr_aliases ]; then
+		echo "File .usr_aliases does not exist. Creating."
+		touch $ABSPATH/.usr_aliases
+	fi
+	# Blindly adds aliases to file currently. Should at least check whether it exists?
+	echo "alias \""$1"\"=\""$2"\"" >> $ABSPATH/.usr_aliases;
+}

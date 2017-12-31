@@ -1,7 +1,5 @@
 # myaliases
-Bash aliases and functions for various things. If you're compiling C++ for Harvey Mudd's CS70 course, you will find .bash_cpp especially useful.
-
-EDIT: Makefiles do everything .bash_cpp does, but more efficiently and better. 
+Bash aliases and functions for various things.
 
 # setup
 Clone this repository and run the `setup` script to get started. 
@@ -25,5 +23,7 @@ fi
 ```
 If you run our uninstall scripts, we will not delete these lines out of your config file and we will not delete `.bash_aliases` (although we will delete out our lines out of it). 
 
+For more details on how usage changes based on your shell, see the [wiki](https://github.com/GiselleSerate/myaliases/wiki/Supported-Systems).
+
 # thanks
-Feel free to fork and use/modify as you please. 
+Feel free to fork and use/modify as you please. Got some useful aliases to share? We consider pull requests. 

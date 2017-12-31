@@ -1,5 +1,9 @@
 # Add an alias.
 addalias() {
+	trap 'previous_command=$this_command; this_command=$BASH_COMMAND' DEBUG
+	ehe="$previous_command"
+	echo $ehe
+	echo "$previous_command, and $this_command"
 	# Create array of args.
 	args=("$@")
 	# TODO: Call original alias command with original arguments.

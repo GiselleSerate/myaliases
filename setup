@@ -52,7 +52,6 @@ handle "$ABSPATH/.included" ~/.bash_aliases
 
 # Source the bashrc to save changes. 
 if [ "$SHELL" = "/bin/bash" ]; then
-	echo "You are running bash."
 	. ~/.bashrc
 else
 	echo "We don't currently support your shell. Please source your equivalent of .bashrc on your own."

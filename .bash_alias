@@ -1,9 +1,15 @@
 # Add an alias.
-add() {
-	if [ ! -f $ABSPATH/.usr_aliases ]; then
-		echo "File .usr_aliases does not exist. Creating."
-		touch $ABSPATH/.usr_aliases
+addalias() {
+	# Create array of args.
+	args=("$@")
+	# TODO: Call original alias command with original arguments.
+	# This will be your option. If it is set, paste everything into the .usr_aliases file. 
+	if [ args[$#]="-p" ]; then
+		if [ ! -f $ABSPATH/.usr_aliases ]; then
+			echo "File .usr_aliases does not exist. Creating."
+			touch $ABSPATH/.usr_aliases
+		fi
+		# Blindly adds aliases to file currently. Should at least check whether it exists?
+		echo "alias \""$2"\"=\""$3"\"" >> $ABSPATH/.usr_aliases;
 	fi
-	# Blindly adds aliases to file currently. Should at least check whether it exists?
-	echo "alias \""$1"\"=\""$2"\"" >> $ABSPATH/.usr_aliases;
 }

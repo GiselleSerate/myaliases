@@ -27,8 +27,8 @@ addalias() {
 		# Compare lengths of strings to determine if current contains pre.
 		first=$(echo -n $current | wc -m)
 		second=$(echo -n ${current#*$pre} | wc -m)
-		echo $(expr "$current" : "$pre")
-		if [ $(expr "$current" : "$pre") -gt 0 ]; then
+		# echo $(expr "$current" : "$pre")
+		if [ "$first" -ne "$second" ]; then
 			echo "SOMEBODY IS TRYING TO REALIAS"
 			# What are we going to do if they try to realias? 
 			# Unalias for the current session? Unalias semi-permanently in my file?

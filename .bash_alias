@@ -21,20 +21,15 @@ addalias() {
 		pre=`expr match "$strip" '\(.*=\)'`
 		pre="alias$pre"
 		current=$(alias)  # Contains all aliases currently defined
-		# current="prankz alias ll=brodyborfobo"
-		# pre="alias ll="
-		echo "$pre HERE $current"
-		echo "PIEPEYPEFYPFE"
-		echo "${current#*$pre}"
 		first=$(echo -n $current | wc -m)
 		second=$(echo -n ${current#*$pre} | wc -m)
-		# I'm trying to find whether pre is anywhere in current. why is this hard. 
 		if [ "$first" -ne "$second" ]; then
 			echo "SOMEBODY IS TRYING TO REALIAS"
+			# What are we going to do if they try to realias? 
+			# Unalias for the current session? Unalias semi-permanently in my file?
+		else
+			# It's a new alias, that's cool
+			echo "$full" >> $ABSPATH/.usr_aliases
 		fi
-		case "$current" in $pre)
-			echo "whoa you exist buddy"
-		;;esac
-		# Blindly adds aliases to file currently. Should at least check whether it exists?
 	fi
 }

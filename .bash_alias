@@ -2,16 +2,21 @@
 addalias() {
 	trap 'previous_command=$this_command; this_command=$BASH_COMMAND' DEBUG
 	orig="$previous_command" # Original command.
-	trunc=${orig%-s} # Optionless command.
-	strip=${trunc#[a-zA-Z0-9_]*\s} # Removes the initial function call, be it addalias, or alias, w/e.
+	# Check if the -s option is enabled.
+	while getopts "s" opt; do
+		case ${opt} in
+			s) local should_save="true"; shift;;
+		esac
+	done
+	strip=${orig%-s} # Remove option if it's at the end. 
+	strip=${strip#[a-zA-Z0-9_]*\s(-s\s*)*} # Removes the initial function call, be it addalias, or alias, w/e. Also removes a -s if it is there.
 	full="alias$strip"
-	if [ "$orig" != "$trunc" ]; then
+	if [ -n should_save ]; then
 		# Make sure the file exists before you continue.
 		if [ ! -f $ABSPATH/.usr_aliases ]; then
 			echo "File .usr_aliases does not exist. Creating."
 			touch $ABSPATH/.usr_aliases
 		fi
-		# for later: regex matches all -p options. ((-p\s*)*) Add after matching one word (see strip) to trunc out -p option.
 		# pre ultimately contains "alias myname=" to figure out if the name has already been aliased.
 		pre=`expr match "$strip" '\(.*=\)'`
 		pre="alias$pre"

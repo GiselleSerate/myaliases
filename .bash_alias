@@ -29,8 +29,8 @@ addalias() {
 		first=$(echo -n $current | wc -m)
 		second=$(echo -n ${current#*$pre} | wc -m)
 		# I'm trying to find whether pre is anywhere in current. why is this hard. 
-		if [ $first!=$second ]; then
-			echo "SOMEBODY DID A THING"
+		if [ "$first" -ne "$second" ]; then
+			echo "SOMEBODY IS TRYING TO REALIAS"
 		fi
 		case "$current" in $pre)
 			echo "whoa you exist buddy"

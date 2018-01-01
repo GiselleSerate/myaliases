@@ -9,8 +9,11 @@ addalias() {
 		esac
 	done
 	strip=${orig%-s} # Remove option if it's at the end. 
-	strip=${strip#[a-zA-Z0-9_]*\s(-s\s*)*} # Removes the initial function call, be it addalias, or alias, w/e. Also removes a -s if it is there.
+	echo $strip
+	strip=${strip#[a-zA-Z0-9_]*\s*(-s)*} # Removes the initial function call, be it addalias, or alias, w/e. Also removes a -s if it is there.
+	echo $strip
 	full="alias$strip"
+	# FUTURE REFERENCE: prawns=$(expr "abcdef" : "abc")
 	if [ -n should_save ]; then
 		# Make sure the file exists before you continue.
 		if [ ! -f $ABSPATH/.usr_aliases ]; then
@@ -24,7 +27,8 @@ addalias() {
 		# Compare lengths of strings to determine if current contains pre.
 		first=$(echo -n $current | wc -m)
 		second=$(echo -n ${current#*$pre} | wc -m)
-		if [ "$first" -ne "$second" ]; then
+		echo $(expr "$current" : "$pre")
+		if [ $(expr "$current" : "$pre") -gt 0 ]; then
 			echo "SOMEBODY IS TRYING TO REALIAS"
 			# What are we going to do if they try to realias? 
 			# Unalias for the current session? Unalias semi-permanently in my file?

@@ -35,6 +35,12 @@ addalias() {
 		first=$(echo -n $current | wc -m)
 		second=$(echo -n ${current#*$pre} | wc -m)
 		if [ "$first" -ne "$second" ]; then
+			# The name is already defined in this namespace. 
+			# Is the name defined by our file? 
+			if [ grep -c "$pre" $ABSPATH/.usr_aliases -gt 0 ]; then
+				echo "WE defined this nonsense"
+			fi
+			
 			echo "The name you are trying to alias is already defined in this session. Please unalias the name first."
 			# What are we going to do if they try to realias? 
 			# Unalias for the current session? Unalias semi-permanently in my file?

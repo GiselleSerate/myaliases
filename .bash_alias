@@ -1,26 +1,22 @@
 # Add an alias.
 addalias() {
 	trap 'previous_command=$this_command; this_command=$BASH_COMMAND' DEBUG
-	orig="$previous_command"
-	echo "Original command: $orig"
-	trunc=${orig%-s}
-	echo "Optionless command: $trunc"
+	orig="$previous_command" # Original command.
+	trunc=${orig%-s} # Optionless command.
+	strip=${trunc#[a-zA-Z0-9_]*\s} # Removes the initial function call, be it addalias, or alias, w/e.
+	full="alias$strip"
 	if [ "$orig" != "$trunc" ]; then
-		echo "THERE WAS AN OPTION HOLY MOLY guacamole."
-		strip=${trunc#[a-zA-Z0-9_]*\s} # Removes the initial function call, be it addalias, or alias, w/e.
-		full="alias$strip"
-		echo $strip
-		echo $full
-		# eval full # Honestly we don't really have to call the original alias command if we source.
 		# Make sure the file exists before you continue.
 		if [ ! -f $ABSPATH/.usr_aliases ]; then
 			echo "File .usr_aliases does not exist. Creating."
 			touch $ABSPATH/.usr_aliases
 		fi
 		# for later: regex matches all -p options. ((-p\s*)*) Add after matching one word (see strip) to trunc out -p option.
+		# pre ultimately contains "alias myname=" to figure out if the name has already been aliased.
 		pre=`expr match "$strip" '\(.*=\)'`
 		pre="alias$pre"
 		current=$(alias)  # Contains all aliases currently defined
+		# Compare lengths of strings to determine if current contains pre.
 		first=$(echo -n $current | wc -m)
 		second=$(echo -n ${current#*$pre} | wc -m)
 		if [ "$first" -ne "$second" ]; then
@@ -29,7 +25,16 @@ addalias() {
 			# Unalias for the current session? Unalias semi-permanently in my file?
 		else
 			# It's a new alias, that's cool
+			echo "Creating new permanent alias: $full"
 			echo "$full" >> $ABSPATH/.usr_aliases
+			src
 		fi
+	else
+		eval full
 	fi
 }
+
+# Include all user-created aliases if the generated file exists. 
+if [ -f $ABSPATH/.usr_aliases ]; then
+	. $ABSPATH/.usr_aliases
+fi

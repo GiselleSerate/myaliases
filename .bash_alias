@@ -1,42 +1,48 @@
 # Add an alias.
 addalias() {
+	# Capture the command that the user typed in. 
 	trap 'previous_command=$this_command; this_command=$BASH_COMMAND' DEBUG
 	orig="$previous_command" # Original command.
+
 	# Check if the -s option is enabled.
 	while getopts "s" opt; do
 		case ${opt} in
 			s) local should_save="true"; shift;;
 		esac
 	done
+
+	# Clean option and call name from function call. 
 	strip=${orig%-s} # Remove option if it's at the end. 
-	echo $strip
 	strip=${strip#[a-zA-Z0-9_]*\s*(-s)*} # Removes the initial function call, be it addalias, or alias, w/e. Also removes a -s if it is there.
-	echo $strip
-	full="alias$strip"
-	# FUTURE REFERENCE: prawns=$(expr "abcdef" : "abc")
+	full="alias$strip" # This is what the call to alias would normally look like. 
+
+	# REGEX FUTURE REFERENCE: prawns=$(expr "abcdef" : "abc")
+	
+	# If you're trying to make a permanent alias.
 	if [ -n should_save ]; then
+
 		# Make sure the file exists before you continue.
 		if [ ! -f $ABSPATH/.usr_aliases ]; then
 			echo "File .usr_aliases does not exist. Creating."
 			touch $ABSPATH/.usr_aliases
 		fi
-		# pre ultimately contains "alias myname=" to figure out if the name has already been aliased.
-		pre=`expr match "$strip" '\(.*=\)'`
+
+		# Check if the alias has already been defined in this session.
+		pre=`expr match "$strip" '\(.*=\)'` # pre will be of form "alias myname="
 		pre="alias$pre"
 		current=$(alias)  # Contains all aliases currently defined
-		# Compare lengths of strings to determine if current contains pre.
+		# Compare lengths of strings to determine if regex deletion happened.
 		first=$(echo -n $current | wc -m)
 		second=$(echo -n ${current#*$pre} | wc -m)
-		# echo $(expr "$current" : "$pre")
 		if [ "$first" -ne "$second" ]; then
-			echo "SOMEBODY IS TRYING TO REALIAS"
+			echo "The name you are trying to alias is already defined in this session. Please unalias the name first."
 			# What are we going to do if they try to realias? 
 			# Unalias for the current session? Unalias semi-permanently in my file?
 		else
-			# It's a new alias, that's cool
+			# Write new permanent alias to file.
 			echo "Creating new permanent alias: $full"
 			echo "$full" >> $ABSPATH/.usr_aliases
-			src
+			src # Assumes that you have enabled src from .bash_nav.
 		fi
 	else
 		eval full

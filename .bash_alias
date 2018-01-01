@@ -3,35 +3,35 @@ addalias() {
 	trap 'previous_command=$this_command; this_command=$BASH_COMMAND' DEBUG
 	orig="$previous_command"
 	echo "Original command: $orig"
-	trunc=${orig%-p}
+	trunc=${orig%-s}
 	echo "Optionless command: $trunc"
-	if [ "$ehe" != "$trunc" ]; then
-		echo "THERE WAS AN OPTION HOLY MOLY"
-		strip=${orig#[a-zA-Z0-9_]*\s} # Removes the initial function call, be it addalias, or alias, w/e.
-		echo "$strip"
-	fi
-	echo "$previous_command, and $this_command"
-	# Create array of args.
-	args=("$@")
-	# TODO: Call original alias command with original arguments.
-	# This will be your option. If it is set, paste everything into the .usr_aliases file. 
-	echo ${args[$#-1]}
-	if [[ "${args[$#-1]}" == "-p" ]]; then
-		echo "Writing persistent alias."
+	if [ "$orig" != "$trunc" ]; then
+		echo "THERE WAS AN OPTION HOLY MOLY guacamole."
+		strip=${trunc#[a-zA-Z0-9_]*\s} # Removes the initial function call, be it addalias, or alias, w/e.
+		full="alias$strip"
+		echo $strip
+		echo $full
+		# eval full # Honestly we don't really have to call the original alias command if we source.
+		# Make sure the file exists before you continue.
 		if [ ! -f $ABSPATH/.usr_aliases ]; then
 			echo "File .usr_aliases does not exist. Creating."
 			touch $ABSPATH/.usr_aliases
 		fi
+		# for later: regex matches all -p options. ((-p\s*)*) Add after matching one word (see strip) to trunc out -p option.
+		alias | (read current; echo $current) # Contains all aliases currently defined.
+		# Isolate the prefix of: alias [nick]=
+		pre=`expr match "$strip" '\(.*=\)'`
+		echo "oh wow the pre is: $pre"
+		pre="alias$pre"
+		echo "umm this is a placeholder but: $pre"
+		# I'm trying to find whether pre is anywhere in current. why is this hard. 
+		echo "the output is $search"
+		if [ ${#search} > 0 ]; then
+			echo "whoa found it boys"
+		fi
+		case "$current" in $pre)
+			echo "whoa you exist buddy"
+		;;esac
 		# Blindly adds aliases to file currently. Should at least check whether it exists?
-		# echo "alias \""$2"\"=\""$3"\"" >> $ABSPATH/.usr_aliases;
-		echo [[ "$*" ]]
-		allargs="$*"
-		echo "$allargs"
-		echo "${allargs%-p}"
-		for arg in "$@"; do
-			if [[ $arg != "-p" ]]; then
-				echo $arg
-			fi
-		done
 	fi
 }

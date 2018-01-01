@@ -18,16 +18,19 @@ addalias() {
 			touch $ABSPATH/.usr_aliases
 		fi
 		# for later: regex matches all -p options. ((-p\s*)*) Add after matching one word (see strip) to trunc out -p option.
-		alias | (read current; echo $current) # Contains all aliases currently defined.
-		# Isolate the prefix of: alias [nick]=
 		pre=`expr match "$strip" '\(.*=\)'`
-		echo "oh wow the pre is: $pre"
 		pre="alias$pre"
-		echo "umm this is a placeholder but: $pre"
+		current=$(alias)  # Contains all aliases currently defined
+		# current="prankz alias ll=brodyborfobo"
+		# pre="alias ll="
+		echo "$pre HERE $current"
+		echo "PIEPEYPEFYPFE"
+		echo "${current#*$pre}"
+		first=$(echo -n $current | wc -m)
+		second=$(echo -n ${current#*$pre} | wc -m)
 		# I'm trying to find whether pre is anywhere in current. why is this hard. 
-		echo "the output is $search"
-		if [ ${#search} > 0 ]; then
-			echo "whoa found it boys"
+		if [ $first!=$second ]; then
+			echo "SOMEBODY DID A THING"
 		fi
 		case "$current" in $pre)
 			echo "whoa you exist buddy"

@@ -1,8 +1,15 @@
 # Add an alias.
 addalias() {
 	trap 'previous_command=$this_command; this_command=$BASH_COMMAND' DEBUG
-	ehe="$previous_command"
-	echo $ehe
+	orig="$previous_command"
+	echo "Original command: $orig"
+	trunc=${orig%-p}
+	echo "Optionless command: $trunc"
+	if [ "$ehe" != "$trunc" ]; then
+		echo "THERE WAS AN OPTION HOLY MOLY"
+		strip=${orig#[a-zA-Z0-9_]*\s} # Removes the initial function call, be it addalias, or alias, w/e.
+		echo "$strip"
+	fi
 	echo "$previous_command, and $this_command"
 	# Create array of args.
 	args=("$@")

@@ -7,7 +7,7 @@ if [ -d '/mnt/c/Windows' ]; then
     alias cmd='/mnt/c/Windows/System32/cmd.exe /C'
 
     # wanna go to desktop
-    alias desk='cd /mnt/c/Users/$(cmd "echo | set /p=%USERNAME%")/Desktop'
+    alias desk="cd /mnt/c/Users/$(echo $(cmd "echo | set /p=%USERPROFILE%") | sed 's:.*\\::')/Desktop"
 
     # open windows file manager in the current directory
     alias explorer='/mnt/c/Windows/explorer.exe .'

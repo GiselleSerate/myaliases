@@ -1,10 +1,10 @@
 altalias() {
 	alias "$1"
-	pre=`expr match "$1" '\(.*=\)'` # pre will be of form "myname="
-	echo $pre
-	wow=$(echo "$pre" | tr -dc '[:alnum:]')
-	echo $wow
-	proper=$(alias alfies)
+	nick=`expr match "$1" '\(.*=\)'` # nick will be of form "myname="
+	echo $nick
+	nick=$(echo "$nick" | tr -dc '[:alnum:]')
+	echo $nick
+	proper=$(alias $nick)
 	echo $proper
 }
 

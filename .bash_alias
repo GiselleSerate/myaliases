@@ -1,3 +1,9 @@
+altalias() {
+	alias "$1"
+	proper=$(alias alfies)
+	echo $proper
+}
+
 # Add an alias.
 addalias() {
 	# Capture the command that the user typed in. 

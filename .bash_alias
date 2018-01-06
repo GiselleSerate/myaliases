@@ -1,5 +1,9 @@
 altalias() {
 	alias "$1"
+	pre=`expr match "$1" '\(.*=\)'` # pre will be of form "myname="
+	echo $pre
+	wow=$(echo "$pre" | tr -dc '[:alnum:]')
+	echo $wow
 	proper=$(alias alfies)
 	echo $proper
 }

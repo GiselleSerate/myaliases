@@ -13,7 +13,7 @@ setpermalias() {
 
 	# Isolate nickname from alias.
 	nick=`expr match "$1" '\(.*=\)'` # nick will be of form "myname="
-	nick=$(echo "$nick" | tr -dc '[:alnum:]') # nick is now alphanumeric only
+	nick=$(echo "$nick" | tr -d '=') # nick is now alphanumeric only
 
 	# Identify code to define this alias.
 	full=$(\alias $nick)
@@ -44,8 +44,6 @@ altalias() {
 			s) should_save=1;;
 		esac
 	done
-
-	echo $should_save
 
 	# Iterate over all arguments.
 	for arg in "$@"

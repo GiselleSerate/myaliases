@@ -38,7 +38,7 @@ altalias() {
 	local should_save=0
 	
 	# Check if the -s option is enabled.
-	local OPTIND opt s
+	local OPTIND opt
 	while getopts "s" opt; do
 		case "${opt}" in
 			s) should_save=1;; 

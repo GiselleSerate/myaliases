@@ -18,9 +18,18 @@ setpermalias() {
 	# Identify code to define this alias.
 	full=$(alias $nick)
 
+	# Clear name definition if it already exists.  
+	# printf 'g/^alias $1d' | ed -s $ABSPATH/.usr_aliases > /dev/null 2>&1
+	reg="g/^alias $nick.*/d" #"$nick"
+	echo "$reg"
+	# printf 'g/^alias %s/d' "$nick" | ed -s $ABSPATH/.usr_aliases > /dev/null 2>&1
+
+	ed -s $ABSPATH/.usr_aliases <<< "$reg" # > /dev/null 2>&1		
+
 	# Write new permanent alias to file.
 	echo "Creating new permanent alias: $full"
 	echo "$full" >> $ABSPATH/.usr_aliases
+
 	src # Assumes that you have enabled src from .bash_nav.
 
 }
@@ -37,10 +46,15 @@ altalias() {
 	# If you're trying to make a permanent alias.
 	if [ -n should_save ]; then
 
-		# for arg in args
+		# Iterate over all arguments.
+		for arg in "$@"
+		do
 			# if arg is not -s
-			# call setpermalias on it
-
+			if [ "$arg" != "-s" ]; then
+				# call setpermalias on it
+				setpermalias "$arg"
+			fi
+		done
 	fi
 }
 

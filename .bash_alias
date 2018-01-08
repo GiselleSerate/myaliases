@@ -20,11 +20,13 @@ setpermalias() {
 
 	# Clear name definition if it already exists.  
 	# printf 'g/^alias $1d' | ed -s $ABSPATH/.usr_aliases > /dev/null 2>&1
-	reg="g/^alias $nick.*/d" #"$nick"
-	echo "$reg"
-	# printf 'g/^alias %s/d' "$nick" | ed -s $ABSPATH/.usr_aliases > /dev/null 2>&1
+#	reg="g/^alias $nick.*/d" #"$nick"
+	reg="g/^alias $nick/d\nwq\n"
 
-	ed -s $ABSPATH/.usr_aliases <<< "$reg" # > /dev/null 2>&1		
+	echo "$reg"
+	printf "$reg" | ed -s $ABSPATH/.usr_aliases > /dev/null 2>&1
+
+	# ed -s $ABSPATH/.usr_aliases <<< "$reg" # > /dev/null 2>&1		
 
 	# Write new permanent alias to file.
 	echo "Creating new permanent alias: $full"

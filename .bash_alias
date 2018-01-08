@@ -36,25 +36,31 @@ setpermalias() {
 # You may define multiple aliases at once.
 altalias() {
 
-	should_save=0
+	should_save=3
 
 	# Check if the -s option is enabled.
 	while getopts "s" opt; do
 		case ${opt} in
-			s) should_save=1;;
+			s) should_save=1;; 
 		esac
 	done
+
+	echo $should_save	
 
 	# Iterate over all arguments.
 	for arg in "$@"
 	do
+		echo $arg
 		if [ "$arg" != "-s" ]; then
+			echo NOT AN OPTION
 			# If you're trying to make a permanent alias.
 			if [ "$should_save" -gt 0 ]; then
+				echo IT ME
 				# Call helper function defined above on this arg.
 				setpermalias "$arg"
 			# Else do basic behavior of alias.
 			else
+				echo BASIC
 				\alias "$arg"
 			fi
 		fi

@@ -37,7 +37,9 @@ altalias() {
 	# If you're trying to make a permanent alias.
 	if [ -n should_save ]; then
 
-		for arg
+		# for arg in args
+			# if arg is not -s
+			# call setpermalias on it
 
 	fi
 }

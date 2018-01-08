@@ -35,12 +35,12 @@ setpermalias() {
 # Use like the alias command; use the option -s if you want to save across sessions.
 # You may define multiple aliases at once.
 altalias() {
-
-	should_save=3
-
+	local should_save=0
+	
 	# Check if the -s option is enabled.
+	local OPTIND opt s
 	while getopts "s" opt; do
-		case ${opt} in
+		case "${opt}" in
 			s) should_save=1;; 
 		esac
 	done
@@ -50,17 +50,13 @@ altalias() {
 	# Iterate over all arguments.
 	for arg in "$@"
 	do
-		echo $arg
 		if [ "$arg" != "-s" ]; then
-			echo NOT AN OPTION
 			# If you're trying to make a permanent alias.
 			if [ "$should_save" -gt 0 ]; then
-				echo IT ME
 				# Call helper function defined above on this arg.
 				setpermalias "$arg"
 			# Else do basic behavior of alias.
 			else
-				echo BASIC
 				\alias "$arg"
 			fi
 		fi

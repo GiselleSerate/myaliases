@@ -19,14 +19,9 @@ setpermalias() {
 	full=$(alias $nick)
 
 	# Clear name definition if it already exists.  
-	# printf 'g/^alias $1d' | ed -s $ABSPATH/.usr_aliases > /dev/null 2>&1
-#	reg="g/^alias $nick.*/d" #"$nick"
 	reg="g/^alias $nick/d\nwq\n"
 
-	echo "$reg"
 	printf "$reg" | ed -s $ABSPATH/.usr_aliases > /dev/null 2>&1
-
-	# ed -s $ABSPATH/.usr_aliases <<< "$reg" # > /dev/null 2>&1		
 
 	# Write new permanent alias to file.
 	echo "Creating new permanent alias: $full"
@@ -36,6 +31,9 @@ setpermalias() {
 
 }
 
+# Allows definition of permanent aliases. 
+# Use like the alias command; use the option -s if you want to save across sessions.
+# You may define multiple aliases at once.
 altalias() {
 
 	# Check if the -s option is enabled.
@@ -45,76 +43,23 @@ altalias() {
 		esac
 	done
 
-	# If you're trying to make a permanent alias.
-	if [ -n should_save ]; then
+	# Iterate over all arguments.
+	for arg in "$@"
+	do
+		# If arg is not the option.
+		if [ "$arg" != "-s" ]; then
 
-		# Iterate over all arguments.
-		for arg in "$@"
-		do
-			# if arg is not -s
-			if [ "$arg" != "-s" ]; then
-				# call setpermalias on it
+			# If you're trying to make a permanent alias.
+			if [ -n should_save ]; then
+				# Call helper function defined above on this arg.
 				setpermalias "$arg"
+			# Else do basic behavior of alias.
+			else
+				alias "$arg"
 			fi
-		done
-	fi
-}
 
-# Add an alias.
-addalias() {
-	# Capture the command that the user typed in. 
-	trap 'previous_command=$this_command; this_command=$BASH_COMMAND' DEBUG
-	orig="$previous_command" # Original command.
-
-	# Check if the -s option is enabled.
-	while getopts "s" opt; do
-		case ${opt} in
-			s) local should_save="true"; shift;;
-		esac
+		fi
 	done
-
-	# Clean option and call name from function call. 
-	strip=${orig%-s} # Remove option if it's at the end. 
-	strip=${strip#[a-zA-Z0-9_]*\s*(-s)*} # Removes the initial function call, be it addalias, or alias, w/e. Also removes a -s if it is there.
-	full="alias$strip" # This is what the call to alias would normally look like. 
-
-	# REGEX FUTURE REFERENCE: prawns=$(expr "abcdef" : "abc")
-	
-	# If you're trying to make a permanent alias.
-	if [ -n should_save ]; then
-
-		# Make sure the file exists before you continue.
-		if [ ! -f $ABSPATH/.usr_aliases ]; then
-			echo "File .usr_aliases does not exist. Creating."
-			touch $ABSPATH/.usr_aliases
-		fi
-
-		# Check if the alias has already been defined in this session.
-		pre=`expr match "$strip" '\(.*=\)'` # pre will be of form "alias myname="
-		pre="alias$pre"
-		current=$(alias)  # Contains all aliases currently defined
-		# Compare lengths of strings to determine if regex deletion happened.
-		first=$(echo -n $current | wc -m)
-		second=$(echo -n ${current#*$pre} | wc -m)
-		if [ "$first" -ne "$second" ]; then
-			# The name is already defined in this namespace. 
-			# Is the name defined by our file? 
-			if [ grep -c "$pre" $ABSPATH/.usr_aliases -gt 0 ]; then
-				echo "WE defined this nonsense"
-			fi
-			
-			echo "The name you are trying to alias is already defined in this session. Please unalias the name first."
-			# What are we going to do if they try to realias? 
-			# Unalias for the current session? Unalias semi-permanently in my file?
-		else
-			# Write new permanent alias to file.
-			echo "Creating new permanent alias: $full"
-			echo "$full" >> $ABSPATH/.usr_aliases
-			src # Assumes that you have enabled src from .bash_nav.
-		fi
-	else
-		eval full
-	fi
 }
 
 # Include all user-created aliases if the generated file exists. 

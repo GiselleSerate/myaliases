@@ -8,15 +8,15 @@ setpermalias() {
 		touch $ABSPATH/.usr_aliases
 	fi
 
-	# Define alias in current session.
-	alias "$1"
+	# Define original alias in current session.
+	\alias "$1"
 
 	# Isolate nickname from alias.
 	nick=`expr match "$1" '\(.*=\)'` # nick will be of form "myname="
 	nick=$(echo "$nick" | tr -dc '[:alnum:]') # nick is now alphanumeric only
 
 	# Identify code to define this alias.
-	full=$(alias $nick)
+	full=$(\alias $nick)
 
 	# Clear name definition if it already exists.  
 	reg="g/^alias $nick/d\nwq\n"
@@ -55,7 +55,7 @@ altalias() {
 				setpermalias "$arg"
 			# Else do basic behavior of alias.
 			else
-				alias "$arg"
+				\alias "$arg"
 			fi
 
 		fi

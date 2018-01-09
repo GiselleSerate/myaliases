@@ -19,7 +19,7 @@ cds() {
         local args=( ${@:2} )
         args=( ${args[@]%/} )
         eval "rm ${args[@]/#/"$SHORT_PATH/"}"
-    elif [ $# -eq 0 ] || [ -d "$1" ] || echo "$1" | grep '^-[LP]\{0,2\}$' > /dev/null; then
+    elif [ $# -eq 0 ] || [ -d "$1" ] || grep -sq '^-[LP]\{0,2\}$' <<< "$1"; then
         cd "$@"
     elif [ -d "$SHORT_PATH/$1" ]; then
         cd -P "$SHORT_PATH/$1"

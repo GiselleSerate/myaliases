@@ -24,8 +24,10 @@ cds() {
     elif [ -d "$SHORT_PATH/$1" ]; then
         cd -P "$SHORT_PATH/$1"
     else
-        echo "cd: $1: No such file or directory"
+        (>&2 echo "cd: $1: No such file or directory")
+        return 1
     fi
+    return $?
 }
 
 # a custom tab-completion function for cds

@@ -20,15 +20,7 @@ cds() {
         args=( ${args[@]%/} )
         eval "rm ${args[@]/#/"$SHORT_PATH/"}"
     else
-        cd "$@" 2> /dev/null
-        if [ $? -ne 0 ]; then
-            if [ ! -d "$SHORT_PATH/$1" ]; then
-                (>&2 echo "cd: $1: No such file or directory")
-                return 1
-            else
-                cd -P "$SHORT_PATH/$1"
-            fi
-        fi
+       { cd "$@" || { test -d "$SHORT_PATH/$1" && cd -P "$SHORT_PATH/$1"; } }
     fi
 }
 

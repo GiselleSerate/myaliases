@@ -19,13 +19,11 @@ cds() {
         local args=( ${@:2} )
         args=( ${args[@]%/} )
         eval "rm ${args[@]/#/"$SHORT_PATH/"}"
-    elif [ $# -eq 0 ] || [ -d "$1" ] || grep -sq '^-[LP]\{0,2\}$' <<< "$1"; then
-        cd "$@"
-    elif [ -d "$SHORT_PATH/$1" ]; then
-        cd -P "$SHORT_PATH/$1"
     else
-        (>&2 echo "cd: $1: No such file or directory")
-        return 1
+        exec 3>&2
+        test -d "$SHORT_PATH/$1" && exec 3>/dev/null
+        { cd "$@" 2>&3 || { test -d "$SHORT_PATH/$1" && cd -P "$SHORT_PATH/$1"; } } 2>/dev/null
+        local exitcode=$?; exec 3>&-; return $exitcode
     fi
 }
 

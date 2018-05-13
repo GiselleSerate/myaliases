@@ -35,6 +35,7 @@ setpermalias() {
 # Use like the alias command; use the option -s if you want to save across sessions.
 # You may define multiple aliases at once.
 altalias() {
+
 	local should_save=0
 	
 	# Check if the -s option is enabled.

@@ -86,14 +86,16 @@ clangt() {
 #	 if you'd like to also delete the executable, specify the
 #	 -e option before all arguments
 clangd() {
+    	local opt OPTIND;
+    	local exec=0;
 	while getopts "e" opt; do
 		case ${opt} in
-			e) local exec="true"; shift;;
+			e) exec=1; shift;;
 		esac
 	done
 	local ARGS=("$@");
 	clangt "$@";
-	if [ -n "$exec" ] ; then
+	if [ $exec -gt 0 ] ; then
 		echo "Deleting all object and executable files: ${ARGS[@]/%/.o} $1";
 		rm ${ARGS[@]/%/.o} "$1";
 	else

@@ -10,25 +10,27 @@ setpermalias() {
 
 	# Define original alias in current session.
 	\alias "$1"
+	
+	# Only proceed if the command was successful. Else leave alias' inbuilt error to tell the user what's wrong.
+	if [ $? == 0 ]; then
+		# Isolate nickname from alias.
+		nick=`expr match "$1" '\(.*=\)'` # nick will be of form "myname="
+		nick=$(echo "$nick" | tr -d '=') # nick is now alphanumeric only
 
-	# Isolate nickname from alias.
-	nick=`expr match "$1" '\(.*=\)'` # nick will be of form "myname="
-	nick=$(echo "$nick" | tr -d '=') # nick is now alphanumeric only
+		# Identify code to define this alias.
+		full=$(\alias $nick)
 
-	# Identify code to define this alias.
-	full=$(\alias $nick)
+		# Clear name definition if it already exists.  
+		reg="g/^alias $nick/d\nwq\n"
 
-	# Clear name definition if it already exists.  
-	reg="g/^alias $nick/d\nwq\n"
+		printf "$reg" | ed -s $ABSPATH/.usr_aliases > /dev/null 2>&1
 
-	printf "$reg" | ed -s $ABSPATH/.usr_aliases > /dev/null 2>&1
+		# Write new permanent alias to file.
+		echo "Creating new permanent alias: $full"
+		echo "$full" >> $ABSPATH/.usr_aliases
 
-	# Write new permanent alias to file.
-	echo "Creating new permanent alias: $full"
-	echo "$full" >> $ABSPATH/.usr_aliases
-
-	src # Assumes that you have enabled src from .bash_nav.
-
+		src # Assumes that you have enabled src from .bash_nav.
+	fi
 }
 
 # Allows definition of permanent aliases. 
@@ -45,8 +47,6 @@ altalias() {
 			s) should_save=1;; 
 		esac
 	done
-
-	echo $should_save	
 
 	# Iterate over all arguments.
 	for arg in "$@"

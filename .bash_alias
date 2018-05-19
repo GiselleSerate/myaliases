@@ -1,0 +1,70 @@
+# Helper function which takes one argument and writes the alias to file.
+# Argument taken in the form nickname='commands' or nickname="commands".
+setpermalias() {
+
+	# Make sure the file exists before you continue.
+	if [ ! -f $ABSPATH/.usr_aliases ]; then
+		echo "File .usr_aliases does not exist. Creating."
+		touch $ABSPATH/.usr_aliases
+	fi
+
+	# Define original alias in current session.
+	\alias "$1"
+	
+	# Only proceed if the command was successful. Else leave alias' inbuilt error to tell the user what's wrong.
+	if [ $? == 0 ]; then
+		# Isolate nickname from alias.
+		nick=`expr match "$1" '\(.*=\)'` # nick will be of form "myname="
+		nick=$(echo "$nick" | tr -d '=') # nick is now alphanumeric only
+
+		# Identify code to define this alias.
+		full=$(\alias $nick)
+
+		# Clear name definition if it already exists.  
+		reg="g/^alias $nick/d\nwq\n"
+
+		printf "$reg" | ed -s $ABSPATH/.usr_aliases > /dev/null 2>&1
+
+		# Write new permanent alias to file.
+		echo "Creating new permanent alias: $full"
+		echo "$full" >> $ABSPATH/.usr_aliases
+
+		src # Assumes that you have enabled src from .bash_nav.
+	fi
+}
+
+# Allows definition of permanent aliases. 
+# Use like the alias command; use the option -s if you want to save across sessions.
+# You may define multiple aliases at once.
+altalias() {
+
+	local should_save=0
+	
+	# Check if the -s option is enabled.
+	local OPTIND opt
+	while getopts "s" opt; do
+		case "${opt}" in
+			s) should_save=1;; 
+		esac
+	done
+
+	# Iterate over all arguments.
+	for arg in "$@"
+	do
+		if [ "$arg" != "-s" ]; then
+			# If you're trying to make a permanent alias.
+			if [ "$should_save" -gt 0 ]; then
+				# Call helper function defined above on this arg.
+				setpermalias "$arg"
+			# Else do basic behavior of alias.
+			else
+				\alias "$arg"
+			fi
+		fi
+	done
+}
+
+# Include all user-created aliases if the generated file exists. 
+if [ -f $ABSPATH/.usr_aliases ]; then
+	. $ABSPATH/.usr_aliases
+fi

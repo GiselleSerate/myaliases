@@ -52,7 +52,7 @@ _cds() {
         # get the absolute path to the shortcut symlink
         local sympath=$($ABSPATH/realpath "$SHORT_PATH/$shortcut")
         # if the user is using a cds shortcut
-        if [ "$shortcut" != "" ] && [ -d "$sympath" ]; then
+        if [ "$shortcut" != "" ] && [ "$shortcut" != ".." ] && [ "$shortcut" != "." ] && [ -d "$sympath" ]; then
             # the absolute path of the text that the user is typing
             totalpath="$sympath/${word#*/}"
             # fake a regular call to _cd. it won't even know the difference ;p

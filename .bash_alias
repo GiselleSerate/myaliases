@@ -28,8 +28,6 @@ setpermalias() {
 		# Write new permanent alias to file.
 		echo "Creating new permanent alias: $full"
 		echo "$full" >> $ABSPATH/.usr_aliases
-
-		src # Assumes that you have enabled src from .bash_nav.
 	fi
 }
 

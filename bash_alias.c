@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <unistd.h> // For execve.
 #include <stdlib.h> // in example code, don't know what this is for.
+#include <string.h> // For strcat.
 
 // Warnings about argc, argv are not something to be worried about at this point.
 int main(int argc, char *argv[], char **env)
@@ -12,7 +13,8 @@ int main(int argc, char *argv[], char **env)
 	{
 		printf("%s\n", env[i++]);
 	}
-	char *exePath = "./.testscript";
+	char *exePath = strcat(getenv("ABSPATH"), "/.testscript");
+	printf("exepath is %s\n", exePath);
 	char *myArray[] = {NULL, NULL, NULL, NULL}; // Pass in single argument, array is null terminated.
 
 	myArray[0] = "hello";

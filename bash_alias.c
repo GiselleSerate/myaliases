@@ -7,6 +7,11 @@ int main(int argc, char *argv[], char **env)
 {
 	// char *exePath = "/bin/ls";
 	printf("environment variable is %s\n", getenv("ABSPATH"));
+	int i = 0;
+	while(env[i] != NULL)
+	{
+		printf("%s\n", env[i++]);
+	}
 	char *exePath = "./.testscript";
 	char *myArray[] = {NULL, NULL, NULL, NULL}; // Pass in single argument, array is null terminated.
 

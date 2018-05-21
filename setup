@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # This is the absolute path to the repo. 
-ABSPATH=$($(dirname "$0")/realpath $(dirname "$0"))
+export ABSPATH=$($(dirname "$0")/realpath $(dirname "$0"))
 
 # Handle: given a file as a first argument,
 # include it in a file given as a second arg

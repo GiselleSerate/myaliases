@@ -2,22 +2,17 @@
 #include <unistd.h> // For execve.
 #include <stdlib.h> // in example code, don't know what this is for.
 
-int main(int c, char *v[], char **env)
+// Warnings about argc, argv are not something to be worried about at this point.
+int main(int argc, char *argv[], char **env)
 {
-	
-	char *exePath = "/bin/ls";
-	char *myArray[] = {NULL, NULL, NULL, NULL};
+	// char *exePath = "/bin/ls";
+	printf("environment variable is %s\n", getenv("ABSPATH"));
+	char *exePath = "./.testscript";
+	char *myArray[] = {NULL, NULL, NULL, NULL}; // Pass in single argument, array is null terminated.
 
 	myArray[0] = "hello";
-//	myArray[1] = v[2];
-//	myArray[2] = v[3];
 	printf("before execve\n");
 	execve(exePath, myArray, env);
-
-	// It's mad about NULL as an argument, so we're passing in an array with a single nullptr. 
-//	char* nullA[1] = {NULL};
-//	printf("before execve\n");
-//	execve("./.testscript", nullA, nullA);
 	printf("returned to main\n");
 	return 0;
 }

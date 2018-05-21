@@ -2,9 +2,8 @@
 # If you get an error, you probably haven't run make and don't have the executable. 
 # Currently we don't do this for you. Maybe my setup script will eventually. Seems like a good thing. 
 subl() {
-	${ABSPATH}/subl
+	${ABSPATH}/sublshort
 }
-
 
 if [ -d '/mnt/c/Windows' ]; then
 

@@ -1,5 +1,5 @@
-# alias to run sublime text from anywhere
-# If you get an error, you probably haven't run make and don't have the executable. 
+# Run sublime text from anywhere.
+# If you get an error, you probably haven't run make in your myaliases directory and don't have the executable. 
 # Currently we don't do this for you. Maybe my setup script will eventually. Seems like a good thing. 
 subl() {
 	"${ABSPATH}/sublshort"

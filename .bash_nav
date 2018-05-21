@@ -1,5 +1,10 @@
 # alias to run sublime text from anywhere
-alias subl='"/mnt/c/Program Files/Sublime Text 3/sublime_text.exe"'
+# If you get an error, you probably haven't run make and don't have the executable. 
+# Currently we don't do this for you. Maybe my setup script will eventually. Seems like a good thing. 
+subl() {
+	${ABSPATH}/subl
+}
+
 
 if [ -d '/mnt/c/Windows' ]; then
 

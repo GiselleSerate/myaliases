@@ -21,7 +21,7 @@ if [ ! -f $ABSPATH/.included ]; then
 	echo "File .included does not exist. Creating."
 	touch $ABSPATH/.included
 	# Set up global var for the path to this directory.
-	echo "ABSPATH=$ABSPATH" >> $ABSPATH/.included
+	echo "export ABSPATH=$ABSPATH" >> $ABSPATH/.included
 fi
 
 # Make sure they have a .bash_aliases.

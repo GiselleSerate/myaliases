@@ -15,9 +15,7 @@ int main(int argc, char *argv[], char **env)
 	}
 	char *exePath = strcat(getenv("ABSPATH"), "/.testscript");
 	printf("exepath is %s\n", exePath);
-	char *myArray[] = {NULL, NULL, NULL, NULL}; // Pass in single argument, array is null terminated.
-
-	myArray[0] = "hello";
+	char *myArray[] = {"[progName]", "arg1", "arg2", NULL}; // Pass in single argument, array is null terminated.
 	printf("before execve\n");
 	execve(exePath, myArray, env);
 	printf("returned to main\n");

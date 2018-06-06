@@ -2,7 +2,13 @@
 Bash aliases and functions for various tasks, particularly file system navigation. Highlights include `cds`, a file system shortcut manager.
 
 # setup
-Clone this repository and run the `setup` script to get started. 
+Clone this repository and run the `setup` script to get started. From anywhere:
+
+```
+git clone https://github.com/GiselleSerate/myaliases
+cd myaliases
+./setup
+```
 
 The `setup` script can be run without any parameters to include everything in the repository, or it can be run with parameters containing the suffixes of the files you want to use. You can run setup again later to add additional files. 
 Example: `./setup nav studycloud`

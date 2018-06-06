@@ -1,0 +1,1 @@
+alias YOLO='git add -A; git commit -m "$(curl http://whatthecommit.com/index.txt"; git push -all -f'

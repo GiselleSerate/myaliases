@@ -23,6 +23,6 @@ src() {
 		. ~/.zshrc
 		echo "~/.zshrc sourced."
 	else
-		echo "This shell is not supported."
+		echo "Could not source; this shell is not supported."
 	fi
 }

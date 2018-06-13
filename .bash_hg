@@ -1,0 +1,4 @@
+glhf() {
+	hg commit -m "$(curl http://whatthecommit.com/index.txt)"
+	hg push
+}

@@ -1,0 +1,4 @@
+# local recursive grep
+grepr() {
+	grep -r "$1" .
+}

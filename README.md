@@ -27,7 +27,7 @@ if [ -f ~/.bash_aliases ]; then
   . ~/.bash_aliases
 fi
 ```
-If you run our uninstall scripts, we will not delete these lines out of your config file and we will not delete `.bash_aliases` (although we will delete out our lines out of it). 
+If you run our uninstall scripts, we will not delete these lines out of your config file and we will not delete `.bash_aliases` (although we will delete our lines out of it). 
 
 For more details on how usage changes based on your shell, see the [wiki](https://github.com/GiselleSerate/myaliases/wiki/Supported-Systems).
 

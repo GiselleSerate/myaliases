@@ -68,7 +68,7 @@ delpermalias() {
 	# Check if the generated file exists
 	if [ -f $ABSPATH/.usr_aliases ]; then
 		# Delete the line in the file that has arg 1, the nickname. 
-		sed "/$1/d" $ABSPATH/.usr_aliases
+		sed "/^alias $1=/d" $ABSPATH/.usr_aliases
 	fi
 }
 

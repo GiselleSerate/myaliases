@@ -62,6 +62,16 @@ altalias() {
 	done
 }
 
+delpermalias() {
+	# Unalias for current session.
+	unalias "$1"
+	# Check if the generated file exists
+	if [ -f $ABSPATH/.usr_aliases ]; then
+		# Delete the line in the file that has arg 1, the nickname. 
+		sed "/^alias $1=/d" $ABSPATH/.usr_aliases
+	fi
+}
+
 # Include all user-created aliases if the generated file exists. 
 if [ -f $ABSPATH/.usr_aliases ]; then
 	. $ABSPATH/.usr_aliases

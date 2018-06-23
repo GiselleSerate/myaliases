@@ -13,7 +13,7 @@ cd myaliases
 The `setup` script can be run without any parameters to include everything in the repository, or it can be run with parameters containing the suffixes of the files you want to use. You can run setup again later to add additional files. 
 Example: `./setup nav studycloud`
 
-For a quick summary of commands included in each file, see the [wiki](https://github.com/GiselleSerate/myaliases/wiki).
+For a quick summary of commands included in each file, see the [usage](https://github.com/GiselleSerate/myaliases/wiki#usage) section of the wiki.
 
 # uninstall
 The `uninstall` script will remove all traces of myaliases from your `.bash_aliases` and delete your locally set preferences. You can also use this if you want to reset your local preferences and start over. 

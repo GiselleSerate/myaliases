@@ -9,7 +9,7 @@ if [ -d '/mnt/c/Windows' ]; then
     # wanna go to desktop
     alias desk="cd /mnt/c/Users/$(echo $(cmd "echo | set /p=%USERPROFILE%") | sed 's:.*\\::')/Desktop"
 
-    # open windows file manager in the current directory
+    # open a file or dir using the default application on windows
     alias open='/mnt/c/Windows/explorer.exe'
 
 fi

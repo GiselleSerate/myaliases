@@ -10,7 +10,7 @@ if [ -d '/mnt/c/Windows' ]; then
     alias desk="cd /mnt/c/Users/$(echo $(cmd "echo | set /p=%USERPROFILE%") | sed 's:.*\\::')/Desktop"
 
     # open windows file manager in the current directory
-    alias explorer='/mnt/c/Windows/explorer.exe .'
+    alias open='/mnt/c/Windows/explorer.exe'
 
 fi
 

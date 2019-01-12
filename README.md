@@ -7,6 +7,7 @@ Clone this repository and run the `setup` script to get started. From anywhere:
 ```
 git clone https://github.com/GiselleSerate/myaliases
 cd myaliases
+make
 ./setup
 ```
 

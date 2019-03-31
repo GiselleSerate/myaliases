@@ -10,7 +10,9 @@ if [ -d '/mnt/c/Windows' ]; then
     alias desk="cd /mnt/c/Users/$(echo $(cmd "echo | set /p=%USERPROFILE%") | sed 's:.*\\::')/Desktop"
 
     # open a file or dir using the default application on windows
-    alias open='/mnt/c/Windows/explorer.exe'
+    open() {
+        /mnt/c/Windows/explorer.exe `wslpath -w "$@"`
+    }
 
 fi
 

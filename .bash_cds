@@ -20,9 +20,8 @@ cds() {
         args=( ${args[@]%/} )
         eval "rm ${args[@]/#/"$SHORT_PATH/"}"
     else
-        exec 3>&2
-        test -d "$SHORT_PATH/$1" && exec 3>/dev/null
-        { cd "$@" 2>&3 || { test -d "$SHORT_PATH/$1" && cd -P "$SHORT_PATH/$1"; } } 2>/dev/null
+        exec 3>&2; test -d "$SHORT_PATH/$1" && exec 3>/dev/null
+        cd "$@" 2>&3 || { test -d "$SHORT_PATH/$1" >/dev/null 2>&1 && { cd -P "$SHORT_PATH/$1" >/dev/null 2>&1 || cd "$@"; } }
         local exitcode=$?; exec 3>&-; return $exitcode
     fi
 }

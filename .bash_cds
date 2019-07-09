@@ -6,9 +6,7 @@
 # to list your shortcuts: run 'cds .'
 cds() {
     local SHORT_PATH="$ABSPATH/.short"
-    if [ ! -d "$SHORT_PATH" ]; then
-        mkdir "$SHORT_PATH"
-    fi
+    mkdir -p "$SHORT_PATH"
     if [ $# -eq 1 ] && [ "$1" = "." ]; then
         ls "$SHORT_PATH"
     elif [ $# -eq 2 ] && [ "$1" = "+" ]; then

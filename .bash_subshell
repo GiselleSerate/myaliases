@@ -1,0 +1,23 @@
+# some subshell-related tricks and aliases
+
+# prepend the string in param2+ to the file provided in param1
+# if param1 does not already exist, it will be created
+# if param2+ is not provided, stdin will be prepended instead
+# 
+# if your file is large, use a temporary file instead of prepend
+# since prepend must load your entire file into memory
+# 
+# ex1: prepend file "prepend me"
+# ex2: echo -ne "prepend\tmore\tcolumn\tnames" | prepend file.tsv
+# ex3: run the command "prepend file", type the text you want prepended, and then press Ctrl+D
+# ex4: mkfifo temp && echo " any type of file!" > temp & prepend temp -n "it should work with" & sleep 1 && cat temp && rm temp
+prepend() {
+    [ ! -e "$1" ] && touch "$1"
+    f="$1"
+    shift
+    if [ "$#" -eq 0 ]; then
+        echo "$(cat - "$f")" > "$f"
+    else
+        echo "$(echo "$@" | cat - "$f")" > "$f"
+    fi
+}

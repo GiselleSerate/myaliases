@@ -5,22 +5,36 @@
 # to remove a shortcut: run 'cds - <shortcut_name>' (you can also tack on multiple shortcut names separated by spaces)
 # to list your shortcuts: run 'cds .'
 cds() {
+    # path to the directory in which cds shortcut symlinks are stored
     local SHORT_PATH="$ABSPATH/.short"
+    # make sure it exists
     mkdir -p "$SHORT_PATH"
+    # determine what the user wants us to do
+    # and ensure that the provided command fits the described interface exactly
+    # if it doesn't, we fall back on the behavior of regular cd
     if [ $# -eq 1 ] && [ "$1" = "." ]; then
+        # display the user's current shortcuts if they type "cds ."
         ls "$SHORT_PATH"
-    elif [ $# -eq 2 ] && [ "$1" = "+" ]; then
-        if [ "$2" != "-" ]; then
-            ln -sfn "$PWD" "$SHORT_PATH/$2"
-        fi
+    elif [ $# -eq 2 ] && [ "$1" = "+" ] && [ "$2" != '-' ]; then
+        # if the user typed 'cds + <shortcut_name>',
+        # create a new cds shortcut or overwrite an existing one
+        # note that '-' is an invalid shortcut name
+        ln -sfn "$PWD" "$SHORT_PATH/$2"
     elif [ $# -ge 2 ] && [ "$1" = "-" ]; then
-        local args=( ${@:2} )
-        args=( ${args[@]%/} )
-        eval "rm ${args[@]/#/"$SHORT_PATH/"}"
+        # if the user typed 'cds - <shortcut_names>',
+        # remove as many of the provided existing shortcuts as possible
+        shift
+        ( cd "$SHORT_PATH" && rm -f "$@" )
+    elif [ $# -eq 1 ] && [ -d "$SHORT_PATH/$1" ]; then
+        # if the user typed "cds <shortcut_name>" and <shortcut_name>
+        # exists, try to use it
+        # but first, give priority to any files in the current dir with
+        # the same shortcut name
+        # and if neither of them work, fall back on the regular behavior of cd
+        # so that the user only sees the error message from regular cd
+        cd "$@" 2>/dev/null || cd -P "$SHORT_PATH/$1" >/dev/null 2>&1 || cd "$@"
     else
-        exec 3>&2; test -d "$SHORT_PATH/$1" && exec 3>/dev/null
-        cd "$@" 2>&3 || { test -d "$SHORT_PATH/$1" >/dev/null 2>&1 && { cd -P "$SHORT_PATH/$1" >/dev/null 2>&1 || cd "$@"; } }
-        local exitcode=$?; exec 3>&-; return $exitcode
+        cd "$@"
     fi
 }
 
@@ -69,6 +83,6 @@ _cds() {
 # command to enable cds tab-completion (only if the shell is bash!)
 # nospace tells it to not put a space afterward
 if $(which ps) -p $$ | grep "bash" >/dev/null; then
-    type _cd  &>/dev/null && complete -o nospace -F _cds cds
+    type _cd &>/dev/null && complete -o nospace -F _cds cds
 fi
 

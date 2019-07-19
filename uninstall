@@ -1,10 +1,9 @@
 #!/bin/sh
 
-repo=$($(dirname "$0")/realpath $(dirname "$0"))
+repo="$(CDPATH= cd -- "$(dirname -- "$0")" && pwd -P)"
 
-# Delete the include lines from ~/.bash_aliases. 
-# Finds comment and deletes 4 lines beginning from that one. 
-printf 'g/^# myaliases/\n.,+3d\nwq\n' | ed -s ~/.bash_aliases > /dev/null 2>&1
+# Delete the include lines from ~/.bash_aliases.
+echo "$(grep -sv "ABSPATH" "$HOME"/.bash_aliases)" > "$HOME"/.bash_aliases
 
 # Delete our generated file.
 rm "$repo/.included"

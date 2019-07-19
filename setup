@@ -3,6 +3,9 @@
 # This is the absolute path to the repo.
 ABSPATH="$(CDPATH= cd -- "$(dirname -- "$0")" && pwd -P)"
 
+# use the prepend function
+. "$ABSPATH/.bash_subshell"
+
 # Handle: given a file as a first argument,
 # include it in a file given as a second arg
 # if it is not already there.
@@ -14,11 +17,9 @@ handle () {
 		local new_text="$1"
 	fi
 	local new_text="test -f $new_text && . $new_text"
-	# make sure that file exists before prepending to it
-	touch "$2"
-	if ! grep -Fxq "$new_text" "$2"; then
+	if [ -z "$(grep -Fsx "$new_text" "$2")" ]; then
 		echo "Including $1."
-		echo "$(echo "$new_text" | cat - "$2")" > "$2"
+		prepend "$2" "$new_text"
 	fi
 }
 
@@ -34,9 +35,8 @@ for f in "$FILES"; do
 done
 
 # Set up global var for the path to this directory.
-# But first, retrieve the contents of .included without the ABSPATH declaration
-curr_include="$(grep -svx "ABSPATH=.*" "$ABSPATH/.included")"
-echo "$(echo "ABSPATH='$ABSPATH'"; echo "$curr_include")" > "$ABSPATH/.included"
+# Use grep to retrieve the contents of .included without the ABSPATH declaration
+echo "$(echo "ABSPATH='$ABSPATH'"; grep -svx "ABSPATH=.*" "$ABSPATH/.included")" > "$ABSPATH/.included"
 
 # If .bash_aliases doesn't already include .included, make it do that.
 handle "$ABSPATH/.included" "$HOME"/.bash_aliases

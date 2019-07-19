@@ -11,19 +11,27 @@ subtrap() { (
 	eval "$@"
 ) }
 
-# The ftee command uses tee to copy stdin to multiple FIFOs (aka named pipes)
-# it writes the paths to each named pipe to its stdout on separate lines
+# The _ftee command uses tee to copy stdin to multiple FIFOs (aka named pipes)
 #
-# param1: required - the number of named pipes to create; must be an int >= 0
-#
-# ex usage on bash: mapfile -t < <(cmd | ftee 4) arr; cat "${arr[@]}"
+# param1: optional - path to a directory in which _ftee should store its FIFOs
+# param2: required - the number of named pipes to create; must be an int > 0
+# output: a string containing the space separated paths to each named pipe
 _ftee() {
-	tmp="$(mktemp -d)"
-	local fifos="$(echo "for(i=1;i<=$1;++i) i" | bc | sed "s:^:$tmp/:")"
-	if [ -n "$fifos" ]; then
-		echo "$fifos"
-		fifos="$(echo "$fifos" | paste -s -d' ')"
-		mkfifo $fifos && tee $fifos 2>&1 >/dev/null
+	# check: has the user specified the tmp dir and the right number of args?
+	if [ $# -ge 2 ]; then
+		local tmp="$1"
+		shift
+	elif [ $# -eq 1 ]; then
+		local tmp="$(mktemp -d)"
+	else
+		exit 1
 	fi
+	# generate a string containing a space separated list of FIFOs
+	local fifos="$(echo "for(i=1;i<=$1;++i) i" | bc | sed "s:^:$tmp/:" | paste -s -d' ')"
+	# handle cases where the number of FIFOs provided is a string or 0
+	test -z "$fifos" && exit 1
+	# print, make, and tee to the FIFOs
+	echo "$fifos"
+	mkfifo $fifos && tee $fifos 2>&1 >/dev/null
 }
-alias ftee="subtrap 'rm -rf $tmp' _ftee"
+alias ftee="subtrap 'rm -rf \$tmpd' 'tmpd=\$(mktemp -d) && _ftee \$tmpd'"

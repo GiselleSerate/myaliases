@@ -3,14 +3,14 @@
 # This is the absolute path to the repo.
 ABSPATH="$(CDPATH= cd -- "$(dirname -- "$0")" && pwd -P)"
 
-# use the prepend function
+# load the prepend function
 . "$ABSPATH/.bash_subshell"
 
 # Handle: given a file as a first argument,
 # include it in a file given as a second arg
 # if it is not already there.
 handle () {
-	local new_text="test -f \"$ABSPATH/$1\" && . \"$ABSPATH/$1\""
+	local new_text="test -f \"\$ABSPATH/$1\" && . \"\$ABSPATH/$1\""
 	if [ -f "$ABSPATH/$1" ] && [ -z "$(grep -Fsx "$new_text" "$2")" ]; then
 		echo "Including $1."
 		prepend "$2" "$new_text"
@@ -24,7 +24,7 @@ else
 	FILES="$(echo " $@" | sed 's/ / .bash_/g')"
 fi
 
-for f in "$FILES"; do
+for f in $FILES; do
 	handle "$f" "$ABSPATH/.included"
 done
 

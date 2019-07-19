@@ -1,10 +1,24 @@
-# the ftee command uses tee to copy stdin to multiple FIFOs (aka named pipes)
-# it writes the paths to each named pipe to stdout on separate lines
+# The subtrap command allows for easy, automatic, guaranteed trapping
+# By running your commands in a subshell, you don't have to worry about
+# conflicting traps or setting multiple traps for many different signals
+# (since the only important signal is the subshell's EXIT)
+#
+# param1: the set of clean up commands
+# param2+: any set of commands to execute in the subshell
+subtrap() {
+	(
+		trap "$1" EXIT
+		shift
+		eval "$@"
+	)
+}
 
+# The ftee command uses tee to copy stdin to multiple FIFOs (aka named pipes)
+# it writes the paths to each named pipe to its stdout on separate lines
+#
 # param1: required - the number of named pipes to create; must be an int >= 0
-
+#
 # ex usage on bash: mapfile -t < <(cmd | ftee 4) arr; cat "${arr[@]}"
-
 ftee() {
 	local PIPE_PATH="/tmp/ftee_pipes"
 	mkdir -p "$PIPE_PATH"

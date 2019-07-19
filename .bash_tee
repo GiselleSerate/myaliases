@@ -1,0 +1,12 @@
+# the ftee command uses tee to copy stdin to multiple FIFOs (aka named pipes)
+# it writes the paths to each named pipe to stdout on separate lines
+
+# param1: required - the number of named pipes to create; must be an int >= 0
+
+# ex usage on bash: mapfile -t < <(cmd | ftee 4) arr; cat "${arr[@]}"
+
+ftee() {
+	local PIPE_PATH="/tmp/ftee_pipes"
+	mkdir -p "$PIPE_PATH"
+
+}

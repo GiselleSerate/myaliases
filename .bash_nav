@@ -16,12 +16,9 @@ fi
 
 # Source the base file for whatever shell you're running.
 src() {
-	if [ "$SHELL" = "/bin/bash" ]; then
-		. ~/.bashrc
-		echo "~/.bashrc sourced."
-	elif [ "$SHELL" = "/bin/zsh" ]; then
-		. ~/.zshrc
-		echo "~/.zshrc sourced."
+	local shll="$(basename -- "$SHELL")"
+	if [ "$shll" = "bash" ] || [ "$shll" = "zsh" ] && [ -f "$HOME/.${shll}rc" ]; then
+		. "$HOME/.${shll}rc" && echo "~/.${shll}rc sourced."
 	else
 		echo "Could not source; this shell is not supported."
 	fi

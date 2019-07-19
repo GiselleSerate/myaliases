@@ -12,7 +12,9 @@
 # ex3: run the command "prepend file", type the text you want prepended, and then press Ctrl+D
 # ex4: mkfifo temp && echo " any type of file!" > temp & prepend temp -n "it should work with" & sleep 1 && cat temp && rm temp
 prepend() {
-    [ ! -e "$1" ] && touch "$1"
+    touch "$1" 2>/dev/null || {
+        echo "file is invalid" 1>&2; return 1
+    }
     f="$1"
     shift
     if [ "$#" -eq 0 ]; then

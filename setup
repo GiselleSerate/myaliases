@@ -10,14 +10,8 @@ ABSPATH="$(CDPATH= cd -- "$(dirname -- "$0")" && pwd -P)"
 # include it in a file given as a second arg
 # if it is not already there.
 handle () {
-	# check whether we need to locate the true path or use literal $ABSPATH
-	if [ -f "$ABSPATH/$1" ]; then
-		local new_text="\"$ABSPATH/$1\""
-	else
-		local new_text="$1"
-	fi
-	local new_text="test -f $new_text && . $new_text"
-	if [ -z "$(grep -Fsx "$new_text" "$2")" ]; then
+	local new_text="test -f \"$ABSPATH/$1\" && . \"$ABSPATH/$1\""
+	if [ -f "$ABSPATH/$1" ] && [ -z "$(grep -Fsx "$new_text" "$2")" ]; then
 		echo "Including $1."
 		prepend "$2" "$new_text"
 	fi
@@ -34,9 +28,9 @@ for f in "$FILES"; do
 	handle "$f" "$ABSPATH/.included"
 done
 
-# Set up global var for the path to this directory.
-# Use grep to retrieve the contents of .included without the ABSPATH declaration
-echo "$(echo "ABSPATH='$ABSPATH'"; grep -svx "ABSPATH=.*" "$ABSPATH/.included")" > "$ABSPATH/.included"
-
 # If .bash_aliases doesn't already include .included, make it do that.
-handle "$ABSPATH/.included" "$HOME"/.bash_aliases
+handle ".included" "$HOME"/.bash_aliases
+
+# Set up global var for the path to this directory.
+# Use grep to retrieve the contents of .bash_aliases without the ABSPATH declaration
+echo "$(echo "ABSPATH='$ABSPATH'"; grep -svx "ABSPATH=.*" "$HOME"/.bash_aliases)" > "$HOME"/.bash_aliases

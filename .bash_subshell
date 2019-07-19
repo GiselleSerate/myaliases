@@ -1,0 +1,11 @@
+# some subshell related tricks and functions
+
+# param1: the set of commands to clean up after the commands in param1
+# param2: any set of commands to execute in the subshell
+subtrap() {
+	(
+		trap "$1" EXIT
+		shift
+		eval "$@"
+	)
+}

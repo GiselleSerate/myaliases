@@ -19,8 +19,13 @@ subtrap() {
 # param1: required - the number of named pipes to create; must be an int >= 0
 #
 # ex usage on bash: mapfile -t < <(cmd | ftee 4) arr; cat "${arr[@]}"
-ftee() {
-	local PIPE_PATH="/tmp/ftee_pipes"
-	mkdir -p "$PIPE_PATH"
-
+_ftee() {
+	tmp="$(mktemp -d)"
+	local fifos="$(echo "for(i=1;i<=$1;++i) i" | bc | sed "s:^:$tmp/:")"
+	if [ ! -z "$fifos" ]; then
+		echo "$fifos"
+		fifos="$(echo "$fifos" | paste -s -d' ')"
+		mkfifo $fifos && tee $fifos 2>&1 >/dev/null
+	fi
 }
+alias ftee="subtrap 'rm -rf $tmp' _ftee"

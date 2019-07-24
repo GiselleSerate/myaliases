@@ -24,7 +24,7 @@ cds() {
         # if the user typed 'cds - <shortcut_names>',
         # remove as many of the provided existing shortcuts as possible
         shift
-        ( cd "$SHORT_PATH" && rm -f "$@" )
+        ( \cd "$SHORT_PATH" && rm -f "$@" )
     elif [ $# -eq 1 ] && [ -d "$SHORT_PATH/$1" ]; then
         # if the user typed "cds <shortcut_name>" and <shortcut_name>
         # exists, try to use it
@@ -32,9 +32,9 @@ cds() {
         # the same shortcut name
         # and if neither of them work, fall back on the regular behavior of cd
         # so that the user only sees the error message from regular cd
-        cd "$@" 2>/dev/null || cd -P "$SHORT_PATH/$1" >/dev/null 2>&1 || cd "$@"
+        \cd "$@" 2>/dev/null || \cd -P "$SHORT_PATH/$1" >/dev/null 2>&1 || \cd "$@"
     else
-        cd "$@"
+        \cd "$@"
     fi
 }
 

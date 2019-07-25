@@ -5,13 +5,11 @@
 #
 # param1: the set of clean up commands
 # param2+: any set of commands to execute in the subshell
-subtrap() {
-	(
-		trap "$1" EXIT
-		shift
-		eval "$@"
-	)
-}
+subtrap() { (
+	trap "$1" EXIT
+	shift
+	eval "$@"
+) }
 
 # The ftee command uses tee to copy stdin to multiple FIFOs (aka named pipes)
 # it writes the paths to each named pipe to its stdout on separate lines

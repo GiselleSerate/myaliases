@@ -34,3 +34,5 @@ handle ".included" "$HOME"/.bash_aliases
 # Set up global var for the path to this directory.
 # Use grep to retrieve the contents of .bash_aliases without the ABSPATH declaration
 echo "$(echo "ABSPATH='$ABSPATH'"; grep -svx "ABSPATH=.*" "$HOME"/.bash_aliases)" > "$HOME"/.bash_aliases
+
+echo "Set up myaliases. Please source your ~/.bashrc."

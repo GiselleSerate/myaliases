@@ -6,9 +6,6 @@ if [ -d '/mnt/c/Windows' ]; then
     # alias cmd for calling the windows command line from bash
     alias cmd='/mnt/c/Windows/System32/cmd.exe /C'
 
-    # wanna go to desktop
-    alias desk="cd /mnt/c/Users/$(echo $(cmd "echo | set /p=%USERPROFILE%") | sed 's:.*\\::')/Desktop"
-
     # open a file or dir using the default application on windows
     open() {
         /mnt/c/Windows/explorer.exe `wslpath -w "$@"`

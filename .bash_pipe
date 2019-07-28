@@ -1,0 +1,67 @@
+# The subtrap command allows for easy, automatic, guaranteed trapping
+# By running your commands in a subshell, you don't have to worry about
+# conflicting traps or setting multiple traps for many different signals
+# (since the only important signal is the subshell's EXIT)
+#
+# param1: the set of clean up commands
+# param2+: any set of commands to execute in the subshell
+subtrap() (
+	trap "$1" EXIT
+	shift
+	eval "$@"
+)
+
+# The _pipes command uses tee to copy stdin to multiple FIFOs (aka named pipes).
+# This allows multiple processes to read from a single stream at the same time.
+# Note that it is impossible to read from only a subset of the FIFOs at a time.
+#
+# param1: required - The number of named pipes to create. Must be an int > 0
+# param2: optional - Path to a directory in which _pipes should store its FIFOs
+#         The dir will be created if doesn't exist
+#         If it isn't provided, a directory in /tmp will be created. You should
+#         only use this option if you have GNU Coreutil's mktemp installed on
+#         your machine
+# output: the path to the dir containing all the FIFOs, where each FIFO will be
+#         named a single integer sequentially from 1
+_pipes() {
+	local tmpd
+	# check: has the user specified the tmp dir?
+	[ $# -ge 2 ] && { mkdir -p "$2" 2>/dev/null && tmpd="$2" || {
+			echo "invalid FIFO directory" 1>&2; return 1
+	}; }
+	# if not, create a temp dir according to $TMPDIR
+	tmpd="${tmpd:-$(mktemp -d)}"
+	# generate a string containing a space separated list of FIFO file paths
+	local fifos="$(echo "for(i=1;i<=${1:-0};++i) i" | bc | sed "s:^:\"$tmpd\"/:" | paste -s -d' ')"
+	# handle cases where the number of FIFOs provided is a string or 0
+	[ -z "$fifos" ] && { echo "invalid number of FIFOs" 1>&2; return 1; }
+	# make and tee to the FIFOs
+	eval "mkfifo $fifos 1>/dev/null && echo \"$tmpd\" && tee $fifos 1>/dev/null"
+}
+# The pipes command is a wrapper around _pipes that automatically handles the
+# FIFO directory creation and subsequent cleanup
+# 
+# ex (on bash):
+# echo "copy this 3 times" | pipes 3 | { read tmpd && paste -d'\n' <(cat "$tmpd"/1) <(cat "$tmpd"/2) <(cat "$tmpd"/3); }
+pipes() {
+	# the path to the temporary directory:
+	local tmpd
+	# code to run right before _pipes:
+	local mktempd
+	if [ $# -ge 2 ]; then
+		# if the user specified a tmp dir to use, just use that
+		tmpd="$2"
+	elif ! command -v mktemp 2>&1 >/dev/null; then
+		# if we need to create a tmp dir, check if mktemp is installed
+		# mktemp is preferrable but it isn't POSIX
+		# so here's an alternative that uses a random dir name in the curr dir
+		tmpd="$PWD/PIPES_TMP.$(od -An -N5 -tx1 /dev/urandom | tr -d ' ')"
+	else
+		# if mktemp is installed, use it to create the tmp dir
+		# note that we don't let _pipes handle the mktemp code
+		# so that we can capture the temp dir in a variable tmpd
+		mktempd="tmpd=\"\$(mktemp -d)\" && "
+		tmpd="\$tmpd"
+	fi
+	subtrap 'rm -rf "$tmpd"' "${mktempd}_pipes $1 \"$tmpd\""
+}

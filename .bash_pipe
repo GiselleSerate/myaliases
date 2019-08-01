@@ -41,8 +41,8 @@ _pipes() {
 # The pipes command is a wrapper around _pipes that automatically handles the
 # FIFO directory creation and subsequent cleanup
 # 
-# ex (on bash):
-# echo "copy this 3 times" | pipes 3 | { read tmpd && paste -d'\n' <(cat "$tmpd"/1) <(cat "$tmpd"/2) <(cat "$tmpd"/3); }
+# ex: tmpd="$(echo "copy this 3 times" | pipes 3 | sed 1q &)" && { cat "$tmpd"/1 & cat "$tmpd"/2 & cat "$tmpd"/3; }
+# ex (on bash): echo "copy this 3 times" | pipes 3 | { read tmpd && paste -d'\n' <(cat "$tmpd"/1) <(cat "$tmpd"/2) <(cat "$tmpd"/3); }
 pipes() {
 	# the path to the temporary directory:
 	local tmpd

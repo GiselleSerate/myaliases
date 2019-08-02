@@ -23,6 +23,9 @@ subtrap() (
 #         your machine
 # output: the path to the dir containing all the FIFOs, where each FIFO will be
 #         named a single integer sequentially from 1
+#
+# ex: tmpd="$(echo "copy this 3 times" | _pipes 3 | sed 1q &)" && { cat "$tmpd"/1 & cat "$tmpd"/2 & cat "$tmpd"/3; }; rm -rf "$tmpd"
+# ex: echo "copy this 3 times" | _pipes 3 | { read tmpd && paste -d'\n' "$tmpd"/1 "$tmpd"/2 "$tmpd"/3; rm -rf "$tmpd" }
 _pipes() {
 	local tmpd
 	# check: has the user specified the tmp dir?
@@ -35,8 +38,10 @@ _pipes() {
 	local fifos="$(echo "for(i=1;i<=${1:-0};++i) i" | bc | sed "s:^:\"$tmpd\"/:" | paste -s -d' ')"
 	# handle cases where the number of FIFOs provided is a string or 0
 	[ -z "$fifos" ] && { echo "invalid number of FIFOs" 1>&2; return 1; }
-	# make and tee to the FIFOs
-	eval "mkfifo $fifos 1>/dev/null && echo \"$tmpd\" && tee $fifos 1>/dev/null"
+	# make the FIFOs (if they don't already exist) and then tee to them
+	eval "mkfifo $fifos" 2>&1 >/dev/null
+	echo "$tmpd"
+	eval "tee $fifos" >/dev/null
 }
 # The pipes command is a wrapper around _pipes that automatically handles the
 # FIFO directory creation and subsequent cleanup
@@ -53,7 +58,7 @@ pipes() {
 		tmpd="$2"
 	elif ! command -v mktemp 2>&1 >/dev/null; then
 		# if we need to create a tmp dir, check if mktemp is installed
-		# mktemp is preferrable but it isn't POSIX
+		# mktemp is preferred but it isn't POSIX
 		# so here's an alternative that uses a random dir name in the curr dir
 		tmpd="$PWD/PIPES_TMP.$(od -An -N5 -tx1 /dev/urandom | tr -d ' ')"
 	else

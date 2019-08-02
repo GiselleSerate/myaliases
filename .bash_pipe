@@ -24,7 +24,7 @@ subtrap() (
 # output: the path to the dir containing all the FIFOs, where each FIFO will be
 #         named a single integer sequentially from 1
 #
-# ex: tmpd="$(echo "copy this 3 times" | _pipes 3 &)" && { cat "$tmpd"/1 & cat "$tmpd"/2 & cat "$tmpd"/3; }; rm -rf "$tmpd"
+# ex: tmpd="$(echo "copy this 3 times" | _pipes 3 | sed 1q &)" && { cat "$tmpd"/1 & cat "$tmpd"/2 & cat "$tmpd"/3; }; rm -rf "$tmpd"
 # ex: echo "copy this 3 times" | _pipes 3 | { read tmpd && paste -d'\n' "$tmpd"/1 "$tmpd"/2 "$tmpd"/3 && rm -rf "$tmpd"; }
 _pipes() {
 	local tmpd
@@ -42,9 +42,6 @@ _pipes() {
 	eval "mkfifo $fifos" 2>&1 >/dev/null
 	# write the name of the temporary directory to stdout
 	echo "$tmpd"
-	# close stdout so that the user will receive the temp dir immediately
-	# (instead of having to wait until tee finishes writing to the FIFOs)
-	exec 1>&-
 	# finally, tee to the FIFOs and force the execution to hang
 	eval "tee $fifos" >/dev/null
 }

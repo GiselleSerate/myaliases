@@ -6,7 +6,7 @@
 # param1: the set of clean up commands
 # param2+: any set of commands to execute in the subshell
 subtrap() (
-	trap "$1" EXIT
+	trap "$1" EXIT >/dev/null
 	shift
 	eval "$@"
 )
@@ -29,7 +29,7 @@ subtrap() (
 _pipes() {
 	local tmpd
 	# check: has the user specified the tmp dir?
-	[ $# -ge 2 ] && { mkdir -p "$2" 2>/dev/null && tmpd="$2" || {
+	[ $# -ge 2 ] && { mkdir -p "$2" 2>&1 >/dev/null && tmpd="$2" || {
 			echo "invalid FIFO directory" 1>&2; return 1
 	}; }
 	# if not, create a temp dir according to $TMPDIR
@@ -44,10 +44,11 @@ _pipes() {
 	eval "tee $fifos" >/dev/null
 }
 # The pipes command is a wrapper around _pipes that automatically handles the
-# FIFO directory creation and subsequent cleanup
+# FIFO directory creation and subsequent cleanup. Note that it also sends
+# _pipes to the background automatically.
 # 
-# ex: tmpd="$(echo "copy this 3 times" | pipes 3 | sed 1q &)" && { cat "$tmpd"/1 & cat "$tmpd"/2 & cat "$tmpd"/3; }
-# ex (on bash): echo "copy this 3 times" | pipes 3 | { read tmpd && paste -d'\n' <(cat "$tmpd"/1) <(cat "$tmpd"/2) <(cat "$tmpd"/3); }
+# ex: tmpd="$(echo "copy this 3 times" | pipes 3)" && { cat "$tmpd"/1 & cat "$tmpd"/2 & cat "$tmpd"/3; }
+# ex: echo "copy this 3 times" | pipes 3 | { read tmpd && paste -d'\n' "$tmpd"/1 "$tmpd"/2 "$tmpd"/3; }
 pipes() {
 	# the path to the temporary directory:
 	local tmpd
@@ -68,5 +69,5 @@ pipes() {
 		mktempd="tmpd=\"\$(mktemp -d)\" && "
 		tmpd="\$tmpd"
 	fi
-	subtrap 'rm -rf "$tmpd"' "${mktempd}_pipes $1 \"$tmpd\""
+	subtrap 'rm -rf "$tmpd"' "${mktempd}_pipes $1 \"$tmpd\"" | sed 1q &
 }

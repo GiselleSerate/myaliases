@@ -52,9 +52,16 @@ _cds() {
         # if there isn't anything (like a - or +) in front of the word we are completing
         if [ "$1" = "$3" ]; then
             _cd
-            temp_reply=( "${temp_reply[@]/%//}" ) # append a slash to cds's completions
+            local d
+            for d in "${temp_reply[@]}"; do
+                # append a slash to cds's completions
+                # and then add them to the rest of the completions
+                [ ! -d "$d" ] && COMPREPLY+=( "${d/%//}" )
+            done
+        else
+            COMPREPLY+=( "${temp_reply[@]}" )
         fi
-        COMPREPLY+=( "${temp_reply[@]}" )
+        return
     # tab completion for 'cds /[tab]', 'cds <letter(s)>/[tab]', 'cds <letter(s)>/<letter(s)>/[tab], or some variation with a slash
     # needs to go find subdirectories
     elif [ "$1" = "$3" ]; then
@@ -63,7 +70,7 @@ _cds() {
         # get the absolute path to the shortcut symlink
         local sympath="$("$ABSPATH"/realpath "$SHORT_PATH/$shortcut")"
         # if the user is using a cds shortcut
-        if [ "$shortcut" != "" ] && [ "$shortcut" != ".." ] && [ "$shortcut" != "." ] && [ -d "$sympath" ]; then
+        if [ "$shortcut" != "" ] && [ ! -d "$shortcut" ] && [ -d "$sympath" ]; then
             # the absolute path of the text that the user is typing
             totalpath="$sympath/${word#*/}"
             # fake a regular call to _cd. it won't even know the difference ;p
@@ -74,11 +81,11 @@ _cds() {
             _cd
             # replace all instances of the fullpath name with the shortcut name
             COMPREPLY=( "${COMPREPLY[@]/$sympath/$shortcut}" )
-            COMPREPLY=( "${COMPREPLY[@]/%//}" ) # append a slash to every completion 
-        else
-            _cd # otherwise, the user is just typing a regular path
+            COMPREPLY=( "${COMPREPLY[@]/%//}" ) # append a slash to every completion
+            return
         fi
     fi
+    _cd "$@" # otherwise, the user is just typing a regular path
 }
 # command to enable cds tab-completion (only if the shell is bash!)
 # nospace tells it to not put a space afterward

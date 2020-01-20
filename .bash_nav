@@ -11,6 +11,23 @@ if [ -d '/mnt/c/Windows' ]; then
         /mnt/c/Windows/explorer.exe `wslpath -w "$@"`
     }
 
+    # mount a remote drive over ssh in WSL2
+    # arg 1: the hostname of the server, as specified in your ssh config
+    sshopen() {
+        ssh -q "$1" exit >/dev/null || return
+        trap "cd \"$PWD\" && { fusermount -u \"$1\"; rmdir \"$1\"; }" EXIT && mkdir -p "$1" && {
+            if [ -z "$(ls -A "$1")" ]; then
+                sshfs -o allow_other,reconnect,ServerAliveInterval=15,ServerAliveCountMax=3,cache_timeout=3600,follow_symlinks "$1": "$1"
+            fi
+        } || {
+            # if the sshfs command didn't work, store the exit code, clean up the dir and the trap, and then return the exit code
+            local exit_code=$?
+            rmdir "$1" && trap - EXIT
+            return $exit_code
+        }
+        cd "$1"
+    }
+
 fi
 
 # Source the base file for whatever shell you're running.

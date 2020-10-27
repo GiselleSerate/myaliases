@@ -17,6 +17,7 @@ if [ -d '/mnt/c/Windows' ]; then
     sshopen() {
         # perform validation checks, first
         command -v sshfs >/dev/null 2>&1 || { echo >&2 "error: sshfs is not installed"; return 1; }
+        grep -q '^user_allow_other' /etc/fuse.conf || { echo >&2 "error: please uncomment the 'user_allow_other' option in /etc/fuse.conf"; return 1; }
         ssh -q "$1" exit >/dev/null || { echo >&2 "error: cannot connect to '$1' via ssh; check that '$1' is in your ~/.ssh/config"; return 1; }
         [ -d "${2:-$1}" ] && { ls -1qA "${2:-$1}" | grep -q .; } >/dev/null 2>&1 && { echo >&2 "error: '${2:-$1}' is not an empty directory"; return 1; }
         # set up a trap to exit the mount before attempting to create it

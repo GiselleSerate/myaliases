@@ -19,17 +19,18 @@ if [ -d '/mnt/c/Windows' ]; then
         command -v sshfs >/dev/null 2>&1 || { echo >&2 "error: sshfs is not installed"; return 1; }
         grep -q '^user_allow_other' /etc/fuse.conf || { echo >&2 "error: please uncomment the 'user_allow_other' option in /etc/fuse.conf"; return 1; }
         ssh -q "$1" exit >/dev/null || { echo >&2 "error: cannot connect to '$1' via ssh; check that '$1' is in your ~/.ssh/config"; return 1; }
-        [ -d "${2:-$1}" ] && { ls -1qA "${2:-$1}" | grep -q .; } >/dev/null 2>&1 && { echo >&2 "error: '${2:-$1}' is not an empty directory"; return 1; }
+        [ -d "${2:-$1}" ] && { ls -1qA "${2:-$1}" | grep -q .; } >/dev/null 2>&1 && { echo >&2 "error: '${2:-$1}' is not an empty directory; is it already mounted?"; return 1; }
         # set up a trap to exit the mount before attempting to create it
         trap "cd \"$PWD\" && { fusermount -u \"${2:-$1}\"; rmdir \"${2:-$1}\"; }" EXIT && mkdir -p "${2:-$1}" && {
-            sshfs -o allow_other,reconnect,ServerAliveInterval=15,ServerAliveCountMax=3,cache_timeout=3600,follow_symlinks "$1": "${2:-$1}"
+            # ServerAlive settings prevent the ssh connection from dying unexpectedly
+            # cache_timeout controls the number of seconds before sshfs retrieves new files from the server
+            sshfs -o allow_other,reconnect,ServerAliveInterval=15,ServerAliveCountMax=3,cache_timeout=900,follow_symlinks "$1": "${2:-$1}"
         } || {
             # if the sshfs command didn't work, store the exit code, clean up the dir and the trap, and then return the exit code
             local exit_code=$?
             rmdir "${2:-$1}" && trap - EXIT
             return $exit_code
         }
-        cd "${2:-$1}" # enter the mount
     }
 
 fi
